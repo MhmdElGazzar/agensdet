@@ -5,9 +5,9 @@
 const config = {
   title: 'AgenSDET',
   tagline: 'Start test automation with Claude, Playwright and Azure Pipelines',
-  url: 'https://mhmdelgazzar.github.io',
+  url: 'https://agentic-testers.github.io',
   baseUrl: '/agensdet/',
-  organizationName: 'MhmdElGazzar',
+  organizationName: 'agentic-testers',
   projectName: 'agensdet',
   trailingSlash: true,
   onBrokenLinks: 'warn',
@@ -32,7 +32,7 @@ const config = {
   themeConfig: {
     navbar: {
       title: 'AgenSDET',
-      items: [{ href: 'https://github.com/MhmdElGazzar/agensdet', label: 'GitHub', position: 'right' }],
+      items: [{ href: 'https://github.com/agentic-testers/agensdet', label: 'GitHub', position: 'right' }],
     },
     colorMode: { respectPrefersColorScheme: true },
   },

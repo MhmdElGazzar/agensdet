@@ -2,8 +2,8 @@
   "name": "agensdet",
   "version": "0.0.1",
   "description": "Helps manual QA engineers start test automation with Playwright and Azure Pipelines.",
-  "author": { "name": "MhmdElGazzar", "url": "https://github.com/MhmdElGazzar" },
-  "homepage": "https://mhmdelgazzar.github.io/agensdet/",
-  "repository": "https://github.com/MhmdElGazzar/agensdet",
+  "author": { "name": "agentic-testers", "url": "https://github.com/agentic-testers" },
+  "homepage": "https://agentic-testers.github.io/agensdet/",
+  "repository": "https://github.com/agentic-testers/agensdet",
   "keywords": ["qa", "test-automation", "playwright", "typescript", "azure-pipelines"]
 }

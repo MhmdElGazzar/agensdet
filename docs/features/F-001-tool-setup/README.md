@@ -53,7 +53,7 @@ One decision per line: the decision, then why.
 - **Two ways for step 0: VS Code + Claude Code extension, or the Claude Code app.** Both run Claude Code on macOS 13+ and Windows 10 (1809)+. *Confirmed*
 - **Prefer VS Code.** It has an editor for the tests, Playwright's extension, and a documented way to install AgenSDET; the app has none of the three documented. *Confirmed*
 - **A paid Claude account is required.** The free plan doesn't include Claude Code. *Confirmed*
-- **Install AgenSDET from `/plugins` → Marketplaces → `MhmdElGazzar/agensdet`.** It's the documented path in VS Code. Not yet tested with our repo. *Draft*
+- **Install AgenSDET from `/plugins` → Marketplaces → `agentic-testers/marketplace`, then install `agensdet`.** It's the documented path in VS Code. Not yet tested in VS Code. *Draft*
 - **Detect the OS once and save it; later features read it.** Every command then fits the machine instead of being guessed. *Confirmed*
 - **Save it in `~/.agensdet/machine.json`.** The OS is machine-wide, like the tools. *Confirmed*
 - **Skip a tool that is already installed at a suitable version.** Installing it again wastes time and can break other work. *Confirmed*

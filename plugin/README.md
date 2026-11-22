@@ -1,3 +1,3 @@
 # AgenSDET plugin
 
-What gets installed. Docs: https://mhmdelgazzar.github.io/agensdet/
+What gets installed. Docs: https://agentic-testers.github.io/agensdet/
