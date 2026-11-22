@@ -26,11 +26,15 @@ One decision per line: the decision, then why.
 
 ### 2026-11-22
 
+- **The plugin ships from `plugin/`; the rest of the repo is how we build it.** Users install only the plugin, not our docs, site and scripts. *Confirmed*
+- **From the VAS framework we reuse skills only: no code, no data, nothing from its projects.** It's company work; the method is what we need. *Confirmed*
+- **The language Claude uses with the tester is a setting, saved in `~/.agensdet/settings.json`.** It's the tester's preference; Claude asks once and remembers. *Confirmed*
+- **Whether to merge with AgenTeX is deferred.** Not needed for the current stage. *Confirmed*
 - **Docs site: Docusaurus in `website/`, reading `docs/` directly.** One source for GitHub and the site; it adds a sidebar and one place to read everything. *Confirmed*
 - **Diagrams are SVG images generated from `registry.json`, not Mermaid.** Mermaid's look was poor; an SVG shows the same on GitHub, the site and VS Code. *Confirmed*
-- **AgenSDET decides what must be the same for everyone, or what a beginner can't judge.** Asking a beginner those questions brings P-1 back. *Draft*
-- **Claude detects what it can read from the machine instead of asking.** Fewer questions. *Draft*
-- **The tester decides anything that changes their machine, lives outside the project, or is their preference.** It's their machine. *Draft*
+- **AgenSDET decides what must be the same for everyone, or what a beginner can't judge.** Asking a beginner those questions brings P-1 back. *Confirmed*
+- **Claude detects what it can read from the machine instead of asking.** Fewer questions. *Confirmed*
+- **The tester decides anything that changes their machine, lives outside the project, or is their preference.** It's their machine. *Confirmed*
 - **Milestones (M1, M2, …) mark what the user can do at each point of the journey; M1 is "tools installed and verified".** They show progress inside a release. *Confirmed*
 - **Name: AgenSDET in prose, `agensdet` as the identifier.** Repo and plugin names must be lowercase. *Confirmed*
 - **P-5's solution: the plugin reviews its own output against a project quality standard (F-004).** Nobody on the team can review yet. *Confirmed*
@@ -40,5 +44,5 @@ One decision per line: the decision, then why.
 ## Out of scope
 
 - Story-to-tests workflow, debugging and review: not in v0.1. **Confirmed**
-- No-code, spec-driven testing (the AgenTeX plugin): separate or merge, TBD.
+- No-code, spec-driven testing (the AgenTeX plugin). Merging is deferred.
 - Other stacks and other CI in v0.1. **Draft**

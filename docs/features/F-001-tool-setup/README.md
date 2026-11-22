@@ -26,7 +26,7 @@ _Not started._
 
 ### What success looks like
 
-- Each tool is installed and answers a version check. **Draft**
+- Each tool is installed and answers a version check. **Confirmed** (2026-11-22)
 - This is the first part of the setup stage; the stage ends at milestone M1 (see the [persona doc](../../personas/manual-qa.md#what-success-looks-like)).
 
 ## Solution
@@ -51,18 +51,18 @@ One decision per line: the decision, then why.
 - **Stack: Playwright + TypeScript, Azure Pipelines.** See [ADR-0002](../../adr/0002-stack-playwright-typescript-azure-pipelines.md). *Confirmed*
 - **Step 0 is done by hand, before F-001.** The plugin can't install itself. *Confirmed*
 - **Two ways for step 0: VS Code + Claude Code extension, or the Claude Code app.** Both run Claude Code on macOS 13+ and Windows 10 (1809)+. *Confirmed*
-- **Prefer VS Code.** It has an editor for the tests, Playwright's extension, and a documented way to install AgenSDET; the app has none of the three documented. *Draft*
+- **Prefer VS Code.** It has an editor for the tests, Playwright's extension, and a documented way to install AgenSDET; the app has none of the three documented. *Confirmed*
 - **A paid Claude account is required.** The free plan doesn't include Claude Code. *Confirmed*
 - **Install AgenSDET from `/plugins` → Marketplaces → `MhmdElGazzar/agensdet`.** It's the documented path in VS Code. Not yet tested with our repo. *Draft*
 - **Detect the OS once and save it; later features read it.** Every command then fits the machine instead of being guessed. *Confirmed*
-- **Save it in `~/.agensdet/machine.json`.** The OS is machine-wide, like the tools. *Draft*
-- **Skip a tool that is already installed at a suitable version.** Installing it again wastes time and can break other work. *Draft*
-- **Ask once, for the whole list, before installing anything.** It changes the tester's machine; one question beats one per tool. *Draft*
-- **Ask before upgrading an older Node.** Other work on the machine may depend on it. *Draft*
-- **Node: the LTS version, pinned in `.nvmrc`.** Everyone on the team gets the same version. *Draft*
+- **Save it in `~/.agensdet/machine.json`.** The OS is machine-wide, like the tools. *Confirmed*
+- **Skip a tool that is already installed at a suitable version.** Installing it again wastes time and can break other work. *Confirmed*
+- **Ask once, for the whole list, before installing anything.** It changes the tester's machine; one question beats one per tool. *Confirmed*
+- **Ask before upgrading an older Node.** Other work on the machine may depend on it. *Confirmed*
+- **Node: the LTS version, pinned in `.nvmrc`.** Everyone on the team gets the same version. *Confirmed*
 - **If a tool can't be installed, stop and ask the tester to install it, then check it.** Company laptops may block installs. *Confirmed*
 - **End F-001 with a version check of each tool.** The full check, the sample test, needs the project from F-005. *Confirmed*
-- **Tell the tester where each thing lives: machine-wide, per project, or shared.** Beginners mix these up, like the JDK versus a project's jars. *Draft*
+- **Tell the tester where each thing lives: machine-wide, per project, or shared.** Beginners mix these up, like the JDK versus a project's jars. *Confirmed*
 
 ## Changelog
 

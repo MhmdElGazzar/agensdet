@@ -1,0 +1,17 @@
+{
+  "name": "agensdet",
+  "owner": {
+    "name": "MhmdElGazzar",
+    "url": "https://github.com/MhmdElGazzar"
+  },
+  "metadata": {
+    "description": "AgenSDET: start test automation with Claude, Playwright and Azure Pipelines."
+  },
+  "plugins": [
+    {
+      "name": "agensdet",
+      "source": "./plugin",
+      "description": "Helps manual QA engineers start test automation with Playwright and Azure Pipelines."
+    }
+  ]
+}

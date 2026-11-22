@@ -141,18 +141,19 @@ function walk(dir, out = []) {
   return out;
 }
 
-// Components the plugin ships, found on disk.
+// Components the plugin ships, found on disk under plugin/ (what users install).
+const PLUGIN = path.join(ROOT, 'plugin');
 function discover() {
   const rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');
   const found = [];
-  for (const f of walk(path.join(ROOT, 'skills'))) {
+  for (const f of walk(path.join(PLUGIN, 'skills'))) {
     if (path.basename(f) === 'SKILL.md') found.push({ type: 'skill', path: rel(path.dirname(f)) });
   }
   for (const type of ['command', 'agent']) {
-    for (const f of walk(path.join(ROOT, `${type}s`))) if (f.endsWith('.md')) found.push({ type, path: rel(f) });
+    for (const f of walk(path.join(PLUGIN, `${type}s`))) if (f.endsWith('.md')) found.push({ type, path: rel(f) });
   }
   for (const [type, file] of [['hook', 'hooks/hooks.json'], ['mcp', '.mcp.json']]) {
-    if (fs.existsSync(path.join(ROOT, file))) found.push({ type, path: file });
+    if (fs.existsSync(path.join(PLUGIN, file))) found.push({ type, path: `plugin/${file}` });
   }
   return found;
 }
