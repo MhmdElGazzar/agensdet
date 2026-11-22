@@ -5,7 +5,7 @@
 <!-- registry:start (generated from registry.json; do not edit) -->
 | Type | Release | Solves | Stage |
 |------|---------|--------|-------|
-| skill | v0.1 | P-1 | Design: draft ([board](../../status-matrix.md)) |
+| skill | v0.1 | P-1 | Spec: not-started ([board](../../status-matrix.md)) |
 <!-- registry:end -->
 
 ## Problem and users
@@ -47,7 +47,7 @@ Without Playwright SDET, the tester follows Playwright's installation page and w
 2. Claude checks which tools are there and at which version. [3, 4]
 3. Claude shows one list: each tool, what it's for, where it lives (machine-wide or per project), and whether it's missing, old, or fine. **The tester approves the list once.** [1, 3, 4]
 4. If Node is older than the LTS, **Claude asks separately before upgrading it.** [3]
-5. Claude installs what's missing with the commands for this machine.
+5. Claude installs what's missing with the commands for this machine; Node follows the order in [ADR-0004](../../adr/0004-node-install-with-fallbacks.md).
 6. If an install fails or is blocked, Claude stops, gives the tester the manual steps for their OS, waits, then checks again.
 7. Claude runs a version check of each tool and shows the result. [5]
 
@@ -83,11 +83,11 @@ One decision per line: the decision, then why.
 - **If a tool can't be installed, stop and ask the tester to install it, then check it.** Company laptops may block installs. *Confirmed*
 - **End F-001 with a version check of each tool.** The full check, the sample test, needs the project from F-005. *Confirmed*
 - **Tell the tester where each thing lives: machine-wide, per project, or shared.** Beginners mix these up, like the JDK versus a project's jars. *Confirmed*
-- **`init-project` is built as a skill, not a plain command.** A skill still shows up as `/init-project`, and a beginner can also ask in their own words and Claude starts it; a plain command only runs when typed. Not an agent: the tester has to see and approve each step, and an agent works out of view. *Draft*
+- **`init-project` is built as a skill, not a plain command.** A skill still shows up as `/init-project`, and a beginner can also ask in their own words and Claude starts it; a plain command only runs when typed. Not an agent: the tester has to see and approve each step, and an agent works out of view. *Confirmed*
 - **One command for the whole setup stage, `/init-project`: it runs F-001, then F-005, up to M1.** The tester starts the stage once; tools already in place are skipped, so it also works for a second project on a machine that is set up. *Confirmed*
 - **Named `init-project`, not `init`.** Claude Code already has `/init` (it writes `CLAUDE.md`), so a tester typing `/init` would get that instead. *Confirmed*
-- **F-001 installs Node only; Git waits for the "Save to git" step.** M1 doesn't need Git, so the tester isn't asked about a tool they won't use yet. *Draft*
-- **Install Node through a version manager (fnm), per user.** It needs no admin rights, and it reads `.nvmrc`, so each project gets its pinned version without breaking other work. Not the nodejs.org installer: it needs admin rights and puts one Node on the whole machine. Not Homebrew or winget alone: also one Node for the whole machine. *Draft*
+- **F-001 installs Node only; Git waits for the "Save to git" step.** M1 doesn't need Git, so the tester isn't asked about a tool they won't use yet. *Confirmed*
+- **Node is installed by the first option that works: (1) a Node of the LTS major already on the machine is used as is; (2) else fnm, per user (winget on Windows, Homebrew on macOS if it's there), keeping the machine's default Node unchanged; (3) else the nodejs.org installer, which asks for an admin password; (4) else stop and ask the tester to install it.** fnm needs no admin rights and reads `.nvmrc`, but on macOS it needs Homebrew, and blocked laptops need a way out. See [ADR-0004](../../adr/0004-node-install-with-fallbacks.md). *Confirmed*
 
 ## Changelog
 

@@ -7,3 +7,4 @@ One file per design decision that had alternatives. Copy `0000-template.md` to a
 - [ADR-0001 — One registry file is the source for all design views](0001-registry-as-single-source.md) — Proposed (waiting for the user to confirm)
 - [ADR-0002 — Scaffold targets Playwright, TypeScript and Azure Pipelines](0002-stack-playwright-typescript-azure-pipelines.md) — Accepted (user, 2026-11-22)
 - [ADR-0003 — One doc per feature, kept separate from the workflow state](0003-feature-doc-separate-from-workflow.md) — Accepted (user, 2026-11-22)
+- [ADR-0004 — Install Node with fnm, with fallbacks](0004-node-install-with-fallbacks.md) — Accepted (user, 2026-11-22)

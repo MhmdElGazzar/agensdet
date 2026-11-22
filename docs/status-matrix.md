@@ -8,16 +8,16 @@ The feature board. ✅ approved, 🟡 draft, ❌ not started. A feature's stage 
 |----|---------|------|---------|---|---|---|---|---|---|---|-------|
 | F-004 | quality-review | skill | TBD | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
 | F-007 | ci-pipeline | command | TBD | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
-| F-001 | [tool-setup](features/F-001-tool-setup/README.md) | skill | v0.1 | ✅ | ✅ | 🟡 | ❌ | ❌ | ❌ | ❌ | Design: draft |
+| F-001 | [tool-setup](features/F-001-tool-setup/README.md) | skill | v0.1 | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | Spec: not-started |
 | F-002 | automation-run | command | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
 | F-003 | test-design-basics | skill | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
-| F-005 | [project-create](features/F-005-project-create/README.md) | skill | v0.1 | ✅ | ✅ | 🟡 | ❌ | ❌ | ❌ | ❌ | Design: draft |
+| F-005 | [project-create](features/F-005-project-create/README.md) | skill | v0.1 | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | Spec: not-started |
 | F-006 | project-structure | command | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
 
 ## By stage
 
 - Problem: 5
-- Design: 2
+- Spec: 2
 
 In progress now: 2 (F-001, F-005)
 

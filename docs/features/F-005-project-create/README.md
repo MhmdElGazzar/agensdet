@@ -5,7 +5,7 @@
 <!-- registry:start (generated from registry.json; do not edit) -->
 | Type | Release | Solves | Stage |
 |------|---------|--------|-------|
-| skill | v0.1 | P-1 | Design: draft ([board](../../status-matrix.md)) |
+| skill | v0.1 | P-1 | Spec: not-started ([board](../../status-matrix.md)) |
 <!-- registry:end -->
 
 ## Problem and users
@@ -71,7 +71,7 @@ One decision per line: the decision, then why.
 - **Chromium, not Chrome.** It ships with Playwright at a matching version; installed Chrome updates by itself and can stop matching. *Confirmed*
 - **Chromium, not Firefox.** It's the engine inside Chrome and Edge, which most people use. *Confirmed*
 - **Add other browsers later, based on the real users of the tester's product.** It's one line in `projects`. *Confirmed*
-- **Create the project with `--no-examples` (was: remove `tests-examples/`).** `create-playwright` 1.17.139 no longer makes `tests-examples/`; its remaining example tests playwright.dev, which confuses beginners. *Draft*
+- **Create the project with `--no-examples` (was: remove `tests-examples/`).** `create-playwright` 1.17.139 no longer makes `tests-examples/`; its remaining example tests playwright.dev, which confuses beginners. *Confirmed*
 - **Explain four config settings: `baseURL`, `projects`, `reporter`, and trace and screenshot on failure.** The rest can wait. *Confirmed*
 - **The tester confirms the project folder's location and name; Claude suggests one.** It's their file. *Confirmed*
 - **End with a sample test on the demo site, inside the new project; passing it is M1.** It proves every tool works together. *Confirmed*
@@ -79,7 +79,7 @@ One decision per line: the decision, then why.
 - **Run it headed.** The tester sees the browser move. *Confirmed*
 - **Check in two steps: a local page, then the demo site.** A failure then says whether the machine or the site is the problem. *Confirmed*
 - **F-005 solves P-1 only; P-4 was removed.** Problems are solved one at a time, and P-4 hasn't been worked on yet. *Confirmed*
-- **Answer `npm init playwright` with its own flags, not by typing into its prompts.** The flags are documented and give the same result every time. *Draft*
+- **Answer `npm init playwright` with its own flags, not by typing into its prompts.** The flags are documented and give the same result every time. *Confirmed*
 
 ## Changelog
 
