@@ -29,6 +29,7 @@ One decision per line: the decision, then why.
 - **The plugin ships from `plugin/`; the rest of the repo is how we build it.** Users install only the plugin, not our docs, site and scripts. *Confirmed*
 - **Repos live under the `agentic-testers` GitHub organization, not a personal account.** The name describes who the plugins are for, and others can be given access without sharing a personal account. *Confirmed*
 - **The marketplace is its own repo, `agentic-testers/marketplace`, named `agentic-testers`.** Later testing and quality plugins join the same catalog, so testers add it once and the add command never changes. *Confirmed*
+- **Feature progress is tracked on a GitHub Project board, filled from `registry.json`.** It shows each feature's current stage as a column; the registry stays the one source, so the board and the docs can't disagree. *Confirmed*
 - **From the VAS framework we reuse skills only: no code, no data, nothing from its projects.** It's company work; the method is what we need. *Confirmed*
 - **The language Claude uses with the tester is a setting, saved in `~/.playwright-sdet/settings.json`.** It's the tester's preference; Claude asks once and remembers. *Confirmed*
 - **Whether to merge with AgenTeX is deferred.** Not needed for the current stage. *Confirmed*

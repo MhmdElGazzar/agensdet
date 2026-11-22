@@ -6,7 +6,7 @@ A Claude plugin, planned and built in small sessions. Its purpose is described i
 
 1. Read `planning/STATUS.md` first. It says what we are working on and what the next step is.
 2. Work only on that step unless the user says otherwise. Sessions are short; one step is enough.
-3. Before stopping, update `planning/STATUS.md` (what was done, next step, open questions), run `node scripts/registry.mjs generate` and `node scripts/registry.mjs check`.
+3. Before stopping, update `planning/STATUS.md` (what was done, next step, open questions), run `node scripts/registry.mjs generate` and `node scripts/registry.mjs check`, then `node scripts/project-sync.mjs` if any stage changed.
 
 Do not guess answers the user has not given. Unanswered items stay as `TBD` and are listed under "Open questions" in `planning/STATUS.md`.
 
@@ -64,7 +64,7 @@ WIP limit: no new feature is started until every feature in progress is ready or
 
 `registry.json` is the single source for features (type, release, problems, stages, path, depends_on, built_from), the plugin's main user journeys (`workflows`), and the audited existing work (`existing`). Generated from it, never edited by hand:
 
-- `docs/status-matrix.md` (the board), `docs/component-map.md`, `docs/workflows.md`, `docs/existing-work.md`, `docs/adr/README.md`
+- `docs/status-matrix.md` (the board as a page), `docs/component-map.md`, `docs/workflows.md`, `docs/existing-work.md`, `docs/adr/README.md`
 - the status block between `registry:start` and `registry:end` in each feature doc
 - the solutions table between `solutions:start` and `solutions:end` in each persona doc
 - the journey diagram between `journey:start` and `journey:end` in the root `README.md` (Getting started), from the first workflow that has `stages`
@@ -77,7 +77,7 @@ A design decision that a diagram cannot explain gets a short ADR in `docs/adr/` 
 
 ## Releases
 
-Every feature belongs to exactly one release (v0.1 MVP, v0.2, v1.0). Each release bumps `version` in `plugin.json` and adds a `CHANGELOG.md` entry. The board may move to GitHub Projects or Azure DevOps later; that decision is open.
+Every feature belongs to exactly one release (v0.1 MVP, v0.2, v1.0). Each release bumps `version` in `plugin.json` and adds a `CHANGELOG.md` entry. The live board is the GitHub Project [Playwright SDET](https://github.com/orgs/agentic-testers/projects/1): one issue per feature (label `feature`), columns by current stage. `node scripts/project-sync.mjs` fills it from `registry.json`; never edit stage fields on the board by hand.
 
 ### Definition of Done
 
