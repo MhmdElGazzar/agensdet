@@ -51,11 +51,11 @@ One decision per line: the decision, then why.
 - **Stack: Playwright + TypeScript, Azure Pipelines.** See [ADR-0002](../../adr/0002-stack-playwright-typescript-azure-pipelines.md). *Confirmed*
 - **Step 0 is done by hand, before F-001.** The plugin can't install itself. *Confirmed*
 - **Two ways for step 0: VS Code + Claude Code extension, or the Claude Code app.** Both run Claude Code on macOS 13+ and Windows 10 (1809)+. *Confirmed*
-- **Prefer VS Code.** It has an editor for the tests, Playwright's extension, and a documented way to install AgenSDET; the app has none of the three documented. *Confirmed*
+- **Prefer VS Code.** It has an editor for the tests, Playwright's extension, and a documented way to install Playwright SDET; the app has none of the three documented. *Confirmed*
 - **A paid Claude account is required.** The free plan doesn't include Claude Code. *Confirmed*
-- **Install AgenSDET from `/plugins` → Marketplaces → `agentic-testers/marketplace`, then install `agensdet`.** It's the documented path in VS Code. Not yet tested in VS Code. *Draft*
+- **Install Playwright SDET from `/plugins` → Marketplaces → `agentic-testers/marketplace`, then install `playwright-sdet`.** It's the documented path in VS Code. Not yet tested in VS Code. *Draft*
 - **Detect the OS once and save it; later features read it.** Every command then fits the machine instead of being guessed. *Confirmed*
-- **Save it in `~/.agensdet/machine.json`.** The OS is machine-wide, like the tools. *Confirmed*
+- **Save it in `~/.playwright-sdet/machine.json`.** The OS is machine-wide, like the tools. *Confirmed*
 - **Skip a tool that is already installed at a suitable version.** Installing it again wastes time and can break other work. *Confirmed*
 - **Ask once, for the whole list, before installing anything.** It changes the tester's machine; one question beats one per tool. *Confirmed*
 - **Ask before upgrading an older Node.** Other work on the machine may depend on it. *Confirmed*

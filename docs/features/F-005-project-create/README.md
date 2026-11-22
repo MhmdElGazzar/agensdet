@@ -45,7 +45,7 @@ One decision per line: the decision, then why.
 ### 2026-11-22
 
 - **F-005 covers steps 2–4: create the project, explain its files, run a sample test.** Together they end the setup stage. *Confirmed*
-- **AgenSDET answers the `npm init playwright` questions: TypeScript, `tests`, no GitHub Actions.** A beginner can't judge them, and we use Azure Pipelines. *Confirmed*
+- **Playwright SDET answers the `npm init playwright` questions: TypeScript, `tests`, no GitHub Actions.** A beginner can't judge them, and we use Azure Pipelines. *Confirmed*
 - **Chromium only at first.** One download, and one place to look when something fails. *Confirmed*
 - **Chromium, not Chrome.** It ships with Playwright at a matching version; installed Chrome updates by itself and can stop matching. *Confirmed*
 - **Chromium, not Firefox.** It's the engine inside Chrome and Edge, which most people use. *Confirmed*

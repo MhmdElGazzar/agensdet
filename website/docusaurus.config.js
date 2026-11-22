@@ -1,14 +1,14 @@
-// AgenSDET docs site. The content is the repo's docs/ folder; nothing is copied.
+// Playwright SDET docs site. The content is the repo's docs/ folder; nothing is copied.
 // @ts-check
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'AgenSDET',
+  title: 'Playwright SDET',
   tagline: 'Start test automation with Claude, Playwright and Azure Pipelines',
   url: 'https://agentic-testers.github.io',
-  baseUrl: '/agensdet/',
+  baseUrl: '/playwright-sdet/',
   organizationName: 'agentic-testers',
-  projectName: 'agensdet',
+  projectName: 'playwright-sdet',
   trailingSlash: true,
   onBrokenLinks: 'warn',
   // .md files are plain Markdown (our generated blocks use HTML comments, which MDX rejects).
@@ -31,8 +31,8 @@ const config = {
   ],
   themeConfig: {
     navbar: {
-      title: 'AgenSDET',
-      items: [{ href: 'https://github.com/agentic-testers/agensdet', label: 'GitHub', position: 'right' }],
+      title: 'Playwright SDET',
+      items: [{ href: 'https://github.com/agentic-testers/playwright-sdet', label: 'GitHub', position: 'right' }],
     },
     colorMode: { respectPrefersColorScheme: true },
   },

@@ -1,6 +1,6 @@
-# AgenSDET
+# Playwright SDET
 
-A Claude plugin that helps manual QA engineers start test automation: from an empty repo to Playwright tests running in Azure Pipelines.
+A Claude plugin that helps QA engineers with their test automation work in Playwright and Azure Pipelines, starting from a manual tester's first test.
 
 Marks used in these docs: **Confirmed** (said by the product owner), **Draft** (proposed), **TBD** (no answer yet).
 
@@ -30,15 +30,15 @@ One decision per line: the decision, then why.
 - **Repos live under the `agentic-testers` GitHub organization, not a personal account.** The name describes who the plugins are for, and others can be given access without sharing a personal account. *Confirmed*
 - **The marketplace is its own repo, `agentic-testers/marketplace`, named `agentic-testers`.** Later testing and quality plugins join the same catalog, so testers add it once and the add command never changes. *Confirmed*
 - **From the VAS framework we reuse skills only: no code, no data, nothing from its projects.** It's company work; the method is what we need. *Confirmed*
-- **The language Claude uses with the tester is a setting, saved in `~/.agensdet/settings.json`.** It's the tester's preference; Claude asks once and remembers. *Confirmed*
+- **The language Claude uses with the tester is a setting, saved in `~/.playwright-sdet/settings.json`.** It's the tester's preference; Claude asks once and remembers. *Confirmed*
 - **Whether to merge with AgenTeX is deferred.** Not needed for the current stage. *Confirmed*
 - **Docs site: Docusaurus in `website/`, reading `docs/` directly.** One source for GitHub and the site; it adds a sidebar and one place to read everything. *Confirmed*
 - **Diagrams are SVG images generated from `registry.json`, not Mermaid.** Mermaid's look was poor; an SVG shows the same on GitHub, the site and VS Code. *Confirmed*
-- **AgenSDET decides what must be the same for everyone, or what a beginner can't judge.** Asking a beginner those questions brings P-1 back. *Confirmed*
+- **Playwright SDET decides what must be the same for everyone, or what a beginner can't judge.** Asking a beginner those questions brings P-1 back. *Confirmed*
 - **Claude detects what it can read from the machine instead of asking.** Fewer questions. *Confirmed*
 - **The tester decides anything that changes their machine, lives outside the project, or is their preference.** It's their machine. *Confirmed*
 - **Milestones (M1, M2, …) mark what the user can do at each point of the journey; M1 is "tools installed and verified".** They show progress inside a release. *Confirmed*
-- **Name: AgenSDET in prose, `agensdet` as the identifier.** Repo and plugin names must be lowercase. *Confirmed*
+- **Name: Playwright SDET in prose, `playwright-sdet` as the identifier (was AgenSDET).** It names the tool and the role, covers all automation work rather than just the start, and doesn't repeat "agentic" from the organization's name. *Confirmed*
 - **P-5's solution: the plugin reviews its own output against a project quality standard (F-004).** Nobody on the team can review yet. *Confirmed*
 - **First persona: the manual QA starting automation.** *Confirmed*
 - **Problems before solutions, solved one at a time from P-1.** So each solution answers a known problem. *Confirmed*

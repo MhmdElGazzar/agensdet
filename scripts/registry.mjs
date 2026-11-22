@@ -7,7 +7,7 @@
 //   node scripts/registry.mjs snapshot v0.1     copy the views to docs/snapshots/v0.1/
 //
 // registry.json has three parts:
-//   features   AgenSDET's own features; workflow state per stage (problem … release)
+//   features   Playwright SDET's own features; workflow state per stage (problem … release)
 //   workflows  the plugin's main user journeys, step by step, each step pointing at a feature
 //   existing   the audited existing work (VAS framework): components, workflows, task evidence
 
@@ -365,7 +365,7 @@ function flatAsJourney(w, key) {
 }
 
 function componentMap(reg) {
-  let out = HEADER + '# Component map\n\nAgenSDET\'s features by type. An arrow from A to B means A uses B.\n\n';
+  let out = HEADER + '# Component map\n\nPlaywright SDET\'s features by type. An arrow from A to B means A uses B.\n\n';
   if (!reg.features.length) return out + 'No features registered yet.\n';
   out += '![Component map](assets/component-map.svg)\n\nBorder: green = ready or released, yellow = in progress, dashed = not started.\n\n';
   out += '## Orphans\n\nFeatures nothing uses and no workflow includes.\n\n' + orphanList(reg.features, reg.workflows, 'feature');
@@ -533,7 +533,7 @@ function statusMatrix(reg) {
 function existingWork(reg) {
   const ex = reg.existing;
   let out = HEADER + '# Existing work (audit)\n\n';
-  out += `Source: ${ex.source ?? 'TBD'}. The audit notes are kept locally in \`planning/00-existing-work.md\`. These components are reference material for AgenSDET's features, not AgenSDET features.\n\n`;
+  out += `Source: ${ex.source ?? 'TBD'}. The audit notes are kept locally in \`planning/00-existing-work.md\`. These components are reference material for Playwright SDET's features, not Playwright SDET features.\n\n`;
   if (!ex.components.length) return out + 'Nothing audited yet.\n';
   out += '## Component map\n\n![Existing components](assets/existing-map.svg)\n\nBorder: green = works, yellow = in progress, dashed = idea, faint = deferred. An arrow from A to B means A uses B.\n\n';
   out += '### Orphans\n\n' + orphanList(ex.components, ex.workflows, 'component') + '\n';

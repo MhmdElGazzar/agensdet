@@ -1,4 +1,4 @@
-# AgenSDET
+# Playwright SDET
 
 A Claude plugin, planned and built in small sessions. Its purpose is described in `docs/README.md`; its users in `docs/personas/`.
 

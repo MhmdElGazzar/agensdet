@@ -1,5 +1,5 @@
 {
-  "plugin": "agensdet",
+  "plugin": "playwright-sdet",
   "features": [
     {
       "id": "F-001",
@@ -120,7 +120,7 @@
               "manual": true
             },
             {
-              "step": "Install AgenSDET",
+              "step": "Install Playwright SDET",
               "manual": true
             }
           ]

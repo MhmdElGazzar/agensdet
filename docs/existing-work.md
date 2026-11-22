@@ -2,7 +2,7 @@
 
 # Existing work (audit)
 
-Source: existing/vas-framework, exported from Azure DevOps VAS/VAS_Framework branch stagging-testing-revamp-v2 at commit 79315ce (2026-11-21). The zip (branch stagging-testing-revamp, commit 3e6e49b, 2026-11-19) is the older version.. The audit notes are kept locally in `planning/00-existing-work.md`. These components are reference material for AgenSDET's features, not AgenSDET features.
+Source: existing/vas-framework, exported from Azure DevOps VAS/VAS_Framework branch stagging-testing-revamp-v2 at commit 79315ce (2026-11-21). The zip (branch stagging-testing-revamp, commit 3e6e49b, 2026-11-19) is the older version.. The audit notes are kept locally in `planning/00-existing-work.md`. These components are reference material for Playwright SDET's features, not Playwright SDET features.
 
 ## Component map
 

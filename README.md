@@ -1,6 +1,6 @@
-# AgenSDET
+# Playwright SDET
 
-A Claude plugin that helps manual QA engineers start test automation with Playwright and Azure Pipelines.
+A Claude plugin that helps QA engineers with their test automation work in Playwright and Azure Pipelines, starting from a manual tester's first test.
 
 > **Status: planning.** Nothing is installable yet. The journey below is what v0.1 is being built for.
 

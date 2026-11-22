@@ -1,7 +1,7 @@
 {
-  "name": "agensdet-website",
+  "name": "playwright-sdet-website",
   "private": true,
-  "description": "AgenSDET docs site. Content comes from ../docs.",
+  "description": "Playwright SDET docs site. Content comes from ../docs.",
   "scripts": {
     "start": "docusaurus start",
     "build": "docusaurus build",

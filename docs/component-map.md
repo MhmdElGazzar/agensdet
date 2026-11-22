@@ -2,7 +2,7 @@
 
 # Component map
 
-AgenSDET's features by type. An arrow from A to B means A uses B.
+Playwright SDET's features by type. An arrow from A to B means A uses B.
 
 ![Component map](assets/component-map.svg)
 

@@ -25,5 +25,5 @@ The first layout had one file per workflow phase for the whole plugin. After two
 ## Consequences
 
 - `scripts/registry.mjs check` enforces that a stage marked started has content in its doc section, and that a stage starts only after the previous one is approved.
-- The existing VAS components move under `existing` in the registry with V-xx ids; they are reference material, not AgenSDET features.
+- The existing VAS components move under `existing` in the registry with V-xx ids; they are reference material, not Playwright SDET features.
 - Skills for the later stages (`feature-workflow`, `feature-design`, …) are written when the first feature reaches them.

@@ -19,6 +19,6 @@ You need a paid Claude account (Pro, Max, Team, Enterprise or Console) and macOS
 1. Get Claude Code, one of two ways:
    - **A. VS Code + the Claude Code extension (recommended).** You get an editor for your tests and Playwright's VS Code extension.
    - **B. The Claude Code desktop app.**
-2. Install AgenSDET: type `/plugins`, open **Marketplaces**, add `agentic-testers/marketplace`, then install **agensdet**.
+2. Install Playwright SDET: type `/plugins`, open **Marketplaces**, add `agentic-testers/marketplace`, then install **playwright-sdet**.
 
 Why these choices: [F-001 decisions](features/F-001-tool-setup/README.md#decisions).
