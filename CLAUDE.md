@@ -50,7 +50,7 @@ Prioritizing between features is plugin-wide, not per feature: releases live in 
 
 Work that already exists is not restarted. It enters through an audit in `planning/00-existing-work.md` and sits under `existing` in `registry.json` with V-xx ids (view: `docs/existing-work.md`). It is reference material that features are `built_from`.
 
-WIP limit: no new feature is started until every feature in progress is ready or explicitly deferred.
+WIP limit: no new feature is started until every feature in progress is ready or explicitly deferred. The features of one journey stage (the steps up to its milestone) count as one item and move through the stages together.
 
 ### Component types (design stage)
 

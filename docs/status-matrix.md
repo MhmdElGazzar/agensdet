@@ -11,7 +11,7 @@ The feature board. ✅ approved, 🟡 draft, ❌ not started. A feature's stage 
 | F-001 | [tool-setup](features/F-001-tool-setup/README.md) | command | v0.1 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Workflow: not-started |
 | F-002 | automation-run | command | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
 | F-003 | test-design-basics | skill | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
-| F-005 | [project-create](features/F-005-project-create/README.md) | command | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
+| F-005 | [project-create](features/F-005-project-create/README.md) | command | v0.1 | 🟡 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: draft |
 | F-006 | project-structure | command | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
 
 ## By stage
@@ -19,7 +19,7 @@ The feature board. ✅ approved, 🟡 draft, ❌ not started. A feature's stage 
 - Problem: 6
 - Workflow: 1
 
-In progress now: 1 (F-001)
+In progress now: 2 (F-001, F-005)
 
 ## Problems and the features that solve them
 
