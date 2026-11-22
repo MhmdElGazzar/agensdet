@@ -11,13 +11,13 @@ The feature board. ✅ approved, 🟡 draft, ❌ not started. A feature's stage 
 | F-001 | [tool-setup](features/F-001-tool-setup/README.md) | command | v0.1 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Workflow: not-started |
 | F-002 | automation-run | command | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
 | F-003 | test-design-basics | skill | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
-| F-005 | [project-create](features/F-005-project-create/README.md) | command | v0.1 | 🟡 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: draft |
+| F-005 | [project-create](features/F-005-project-create/README.md) | command | v0.1 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Workflow: not-started |
 | F-006 | project-structure | command | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
 
 ## By stage
 
-- Problem: 6
-- Workflow: 1
+- Problem: 5
+- Workflow: 2
 
 In progress now: 2 (F-001, F-005)
 
@@ -28,5 +28,5 @@ In progress now: 2 (F-001, F-005)
 | P-1 | [Manual QA starting automation](personas/manual-qa.md) | F-001, F-005, F-006, F-007 |
 | P-2 | [Manual QA starting automation](personas/manual-qa.md) | F-003 |
 | P-3 | [Manual QA starting automation](personas/manual-qa.md) | F-003, F-006 |
-| P-4 | [Manual QA starting automation](personas/manual-qa.md) | F-002, F-005 |
+| P-4 | [Manual QA starting automation](personas/manual-qa.md) | F-002 |
 | P-5 | [Manual QA starting automation](personas/manual-qa.md) | F-004, F-006 |

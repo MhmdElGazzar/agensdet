@@ -71,12 +71,11 @@
       "type": "command",
       "release": "v0.1",
       "problems": [
-        "P-1",
-        "P-4"
+        "P-1"
       ],
       "built_from": [],
       "stages": {
-        "problem": "draft"
+        "problem": "approved 2026-11-22"
       },
       "notes": "Split from automation-init (2026-11-22): journey steps 2-4. Decisions so far are in its doc.",
       "doc": "docs/features/F-005-project-create/README.md"

@@ -40,14 +40,13 @@ Generated from `registry.json`.
 | Problem | Solved by | Stage |
 |---------|-----------|-------|
 | P-1 | [F-001 tool-setup](../features/F-001-tool-setup/README.md) | Workflow: not-started |
-| P-1 | [F-005 project-create](../features/F-005-project-create/README.md) | Problem: draft |
+| P-1 | [F-005 project-create](../features/F-005-project-create/README.md) | Workflow: not-started |
 | P-1 | F-006 project-structure | Problem: not-started |
 | P-1 | F-007 ci-pipeline | Problem: not-started |
 | P-2 | F-003 test-design-basics | Problem: not-started |
 | P-3 | F-003 test-design-basics | Problem: not-started |
 | P-3 | F-006 project-structure | Problem: not-started |
 | P-4 | F-002 automation-run | Problem: not-started |
-| P-4 | [F-005 project-create](../features/F-005-project-create/README.md) | Problem: draft |
 | P-5 | F-004 quality-review | Problem: not-started |
 | P-5 | F-006 project-structure | Problem: not-started |
 <!-- solutions:end -->
