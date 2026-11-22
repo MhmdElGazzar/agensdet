@@ -5,7 +5,7 @@
 <!-- registry:start (generated from registry.json; do not edit) -->
 | Type | Release | Solves | Stage |
 |------|---------|--------|-------|
-| skill | v0.1 | P-1 | Spec: not-started ([board](../../status-matrix.md)) |
+| skill | v0.1 | P-1 | Spec: draft ([board](../../status-matrix.md)) |
 <!-- registry:end -->
 
 ## Problem and users
@@ -53,7 +53,61 @@ After installing the tools ([F-001](../F-001-tool-setup/README.md#workflow-today
 
 ## Behavior
 
-_Not started._
+F-005 is the second half of `/init-project`; it starts only when [F-001](../F-001-tool-setup/README.md#behavior) ended well.
+
+### Trigger
+
+- F-001 finished with a working Node, in the same `/init-project` run.
+
+### Inputs
+
+- `~/.playwright-sdet/machine.json` (OS, `nodeRoute`) and the Node LTS major, from F-001.
+- The folder open in VS Code.
+- The tester's answer: the project folder.
+
+### Outputs
+
+A project folder containing:
+
+- `.nvmrc`: the LTS major only, for example `24`.
+- What `create-playwright` makes: `package.json`, `playwright.config.ts`, `tests/`, `.gitignore`, `node_modules/`, and Chromium in Playwright's shared browser folder.
+- `playwright.config.ts` changed in three places: `baseURL: 'https://www.automationexercise.com'`, `trace: 'retain-on-failure'`, `screenshot: 'only-on-failure'`.
+- `tests/sample.spec.ts`, two tests run in order (`test.describe.serial`), so the second runs only if the first passes:
+  1. **Machine check**: opens a local page (`page.setContent`) and sees its heading. No network.
+  2. **Test Case 7: Verify Test Cases Page**: opens the home page and checks it's visible, clicks the menu link "Test Cases", checks the URL ends with `/test_cases` and the "Test Cases" heading is visible.
+- For the tester: what each main file is for, the four config settings, how to run the tests again (`npx playwright test --headed`) and open the report (`npx playwright show-report`).
+
+### Steps
+
+Commands run with the project's Node: on the `fnm` route, through `fnm exec --using=.nvmrc`.
+
+1. Suggest a folder: the open folder if it's empty, else a new `playwright-tests` folder inside it. **The tester confirms or gives another.**
+2. Write `.nvmrc`.
+3. Run `npm init playwright@latest -- --quiet --lang=TypeScript --browser=chromium --no-examples`.
+4. Change the three config settings.
+5. Explain the files and the four settings (`baseURL`, `projects`, `reporter`, trace and screenshot on failure).
+6. Write `tests/sample.spec.ts`.
+7. Run `npx playwright test tests/sample.spec.ts --headed`. The tester watches the browser.
+8. Both pass: say milestone M1 is reached. One fails: say which one.
+
+### When something fails
+
+| Situation | What Claude does |
+|-----------|------------------|
+| The chosen folder isn't empty | Asks for another folder; never writes into a folder with other files. |
+| The chosen folder already has a `playwright.config.*` | Says it's already a Playwright project and asks: use it (go to step 6) or pick another folder. |
+| `npm init` or the browser download can't reach the network | Retries once; then stops, shows the error, and asks the tester to check their connection or proxy and run `/init-project` again. |
+| The machine check fails | Runs `npx playwright install chromium` and tries once more; if it still fails, stops and shows the error. The site test isn't run. |
+| The Test Case 7 test fails | Runs it once more; if it still fails, says the machine is fine (the first check passed) and the site didn't respond as expected, and shows the error. |
+
+### Running it again
+
+- If the folder already holds this project, steps 1–5 are skipped and the sample test runs again.
+
+### To verify during build
+
+- A cookie or consent dialog on automationexercise.com: whether it appears, and that the test closes it.
+- `--quiet` makes `tests` the test folder in an empty project (it picks `e2e` when `tests` already exists).
 
 ## Quality
 
@@ -80,6 +134,9 @@ One decision per line: the decision, then why.
 - **Check in two steps: a local page, then the demo site.** A failure then says whether the machine or the site is the problem. *Confirmed*
 - **F-005 solves P-1 only; P-4 was removed.** Problems are solved one at a time, and P-4 hasn't been worked on yet. *Confirmed*
 - **Answer `npm init playwright` with its own flags, not by typing into its prompts.** The flags are documented and give the same result every time. *Confirmed*
+- **Suggested folder: the open folder if it's empty, else a new `playwright-tests` folder inside it.** The tester most likely opened the folder they want to work in. *Draft*
+- **Never write into a folder that has other files.** The tester's files stay untouched. *Draft*
+- **The two sample checks run in order, and the site check only runs after the machine check passes.** A site failure then can't hide a machine problem. *Draft*
 
 ## Changelog
 
