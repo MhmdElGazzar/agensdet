@@ -1,0 +1,466 @@
+{
+  "plugin": "agensdet",
+  "features": [
+    {
+      "id": "F-001",
+      "name": "automation-init",
+      "type": "command",
+      "release": "v0.1",
+      "doc": "docs/features/F-001-automation-init/README.md",
+      "problems": [
+        "P-1",
+        "P-3"
+      ],
+      "built_from": [
+        "V-14"
+      ],
+      "stages": {
+        "problem": "draft"
+      }
+    },
+    {
+      "id": "F-002",
+      "name": "automation-run",
+      "type": "command",
+      "release": "v0.1",
+      "problems": [
+        "P-4"
+      ],
+      "built_from": [
+        "V-02",
+        "V-13",
+        "V-15"
+      ],
+      "stages": {}
+    },
+    {
+      "id": "F-003",
+      "name": "test-design-basics",
+      "type": "skill",
+      "release": "v0.1",
+      "problems": [
+        "P-2",
+        "P-3"
+      ],
+      "built_from": [
+        "V-12",
+        "V-08"
+      ],
+      "stages": {}
+    }
+  ],
+  "workflows": [
+    {
+      "name": "First test to CI (v0.1 release check)",
+      "steps": [
+        {
+          "step": "Create the project structure in an empty repo",
+          "feature": "F-001"
+        },
+        {
+          "step": "Write the first test",
+          "feature": "F-003"
+        },
+        {
+          "step": "Run it and read the summary",
+          "feature": "F-002"
+        },
+        {
+          "step": "Push; Azure Pipelines runs it and publishes the report",
+          "feature": "F-001"
+        }
+      ]
+    }
+  ],
+  "existing": {
+    "source": "existing/vas-framework, exported from Azure DevOps VAS/VAS_Framework branch stagging-testing-revamp-v2 at commit 79315ce (2026-11-21). The zip (branch stagging-testing-revamp, commit 3e6e49b, 2026-11-19) is the older version.",
+    "components": [
+      {
+        "id": "V-01",
+        "name": "vas-command-automate",
+        "type": "command",
+        "state": "works",
+        "path": "existing/vas-framework/AGENTS.md",
+        "depends_on": [
+          "V-05"
+        ],
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "partial",
+          "docs": "partial"
+        },
+        "notes": "Not a slash command: a chat phrase routed by the table in AGENTS.md. Real use is claimed in the author's post; no run evidence tied to it in the zip."
+      },
+      {
+        "id": "V-02",
+        "name": "vas-command-run",
+        "type": "command",
+        "state": "works",
+        "path": "existing/vas-framework/scripts/vas-command-run.cjs",
+        "depends_on": [
+          "V-13",
+          "V-15"
+        ],
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "partial",
+          "docs": "partial"
+        },
+        "notes": "Node script: validates IDs, runs discovery through vas-hook-check, runs Playwright, then writes the story report through vas-hook-report."
+      },
+      {
+        "id": "V-03",
+        "name": "vas-command-debug",
+        "type": "command",
+        "state": "works",
+        "path": "existing/vas-framework/AGENTS.md",
+        "depends_on": [
+          "V-06"
+        ],
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "partial",
+          "docs": "partial"
+        },
+        "notes": "Chat phrase routed by AGENTS.md."
+      },
+      {
+        "id": "V-04",
+        "name": "vas-command-review",
+        "type": "command",
+        "state": "works",
+        "path": "existing/vas-framework/AGENTS.md",
+        "depends_on": [
+          "V-07"
+        ],
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "partial",
+          "docs": "partial"
+        },
+        "notes": "Chat phrase routed by AGENTS.md."
+      },
+      {
+        "id": "V-05",
+        "name": "vas-skill-automate",
+        "type": "skill",
+        "state": "works",
+        "path": "existing/vas-framework/.agents/skills/vas-skill-automate/SKILL.md",
+        "depends_on": [
+          "V-12",
+          "V-08",
+          "V-11",
+          "V-10",
+          "V-13",
+          "V-02",
+          "V-14",
+          "V-06",
+          "V-09",
+          "V-07"
+        ],
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "partial",
+          "docs": "partial"
+        },
+        "notes": "Nine-step workflow. v2 calls the five standalone skills in steps 3, 4, 5 and 8. Still hard-codes story 428391 scope in step 3. How it reads Azure DevOps is not in the repo."
+      },
+      {
+        "id": "V-06",
+        "name": "vas-skill-debug",
+        "type": "skill",
+        "state": "works",
+        "path": "existing/vas-framework/.agents/skills/vas-skill-debug/SKILL.md",
+        "depends_on": [
+          "V-02"
+        ],
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "partial",
+          "docs": "partial"
+        },
+        "notes": "Classifies a failure as automation defect, product failure, missing data, or environment. Uses the result template."
+      },
+      {
+        "id": "V-07",
+        "name": "vas-skill-review",
+        "type": "skill",
+        "state": "works",
+        "path": "existing/vas-framework/.agents/skills/vas-skill-review/SKILL.md",
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "partial",
+          "docs": "partial"
+        },
+        "notes": "Uses the checklist and result templates.",
+        "depends_on": []
+      },
+      {
+        "id": "V-08",
+        "name": "vas-skill-maintainability",
+        "type": "skill",
+        "state": "works",
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "missing",
+          "docs": "missing"
+        },
+        "notes": "Added in v2 (2026-11-21), about 10 lines. Called by vas-skill-automate step 4, where an action belongs. Not listed in AGENTS.md or the README. Kept in v0.2: too new for real-use evidence.",
+        "path": "existing/vas-framework/.agents/skills/vas-skill-maintainability/SKILL.md",
+        "depends_on": []
+      },
+      {
+        "id": "V-09",
+        "name": "vas-skill-reliability",
+        "type": "skill",
+        "state": "works",
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "missing",
+          "docs": "missing"
+        },
+        "notes": "Added in v2 (2026-11-21), about 10 lines. Called by vas-skill-automate step 8, flaky results. Not listed in AGENTS.md or the README. Kept in v0.2: too new for real-use evidence.",
+        "path": "existing/vas-framework/.agents/skills/vas-skill-reliability/SKILL.md",
+        "depends_on": []
+      },
+      {
+        "id": "V-10",
+        "name": "vas-skill-readiness",
+        "type": "skill",
+        "state": "works",
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "missing",
+          "docs": "missing"
+        },
+        "notes": "Added in v2 (2026-11-21), about 10 lines. Called by vas-skill-automate step 5, before running. Not listed in AGENTS.md or the README. Kept in v0.2: too new for real-use evidence.",
+        "path": "existing/vas-framework/.agents/skills/vas-skill-readiness/SKILL.md",
+        "depends_on": [
+          "V-13"
+        ]
+      },
+      {
+        "id": "V-11",
+        "name": "vas-skill-scalability",
+        "type": "skill",
+        "state": "works",
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "missing",
+          "docs": "missing"
+        },
+        "notes": "Added in v2 (2026-11-21), about 10 lines. Called by vas-skill-automate step 4, more variants or suites. Not listed in AGENTS.md or the README. Kept in v0.2: too new for real-use evidence.",
+        "path": "existing/vas-framework/.agents/skills/vas-skill-scalability/SKILL.md",
+        "depends_on": []
+      },
+      {
+        "id": "V-12",
+        "name": "vas-skill-testability",
+        "type": "skill",
+        "state": "works",
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "missing",
+          "docs": "missing"
+        },
+        "notes": "Added in v2 (2026-11-21), about 10 lines. Called by vas-skill-automate step 3, what proves a requirement. Not listed in AGENTS.md or the README. Kept in v0.2: too new for real-use evidence.",
+        "path": "existing/vas-framework/.agents/skills/vas-skill-testability/SKILL.md",
+        "depends_on": []
+      },
+      {
+        "id": "V-13",
+        "name": "vas-hook-check",
+        "type": "hook",
+        "state": "works",
+        "path": "existing/vas-framework/scripts/vas-hook-check.cjs",
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "partial",
+          "docs": "partial"
+        },
+        "notes": "Not a Claude Code hook: a script the skills and vas-command-run call explicitly. v2 resolves former test IDs to current STG IDs (scripts/regression-case-ids.cjs). No unit test.",
+        "depends_on": []
+      },
+      {
+        "id": "V-14",
+        "name": "vas-hook-data",
+        "type": "hook",
+        "state": "works",
+        "path": "existing/vas-framework/src/fixtures/vas-hook-data.ts",
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "missing",
+          "real_use": "partial",
+          "docs": "partial"
+        },
+        "notes": "Not a Claude Code hook: a Playwright helper (requireStoryData) that tests call to skip with a recorded reason.",
+        "depends_on": []
+      },
+      {
+        "id": "V-15",
+        "name": "vas-hook-report",
+        "type": "hook",
+        "state": "works",
+        "path": "existing/vas-framework/scripts/vas-hook-report.cjs",
+        "tasks": {
+          "spec": "missing",
+          "build": "done",
+          "evals": "partial",
+          "real_use": "partial",
+          "docs": "partial"
+        },
+        "notes": "Not a Claude Code hook: called by vas-command-run after the run. Has a unit test (scripts/vas-hook-report.test.cjs); not run in this audit, so evals stay partial. v2 also exports describeOutcome.",
+        "depends_on": []
+      }
+    ],
+    "workflows": [
+      {
+        "name": "Automate a story on staging",
+        "steps": [
+          {
+            "step": "User gives an Azure story link",
+            "component": "V-01"
+          },
+          {
+            "step": "Read the story and acceptance criteria",
+            "component": "V-05"
+          },
+          {
+            "step": "Locate backend spec, frontend and existing tests",
+            "component": "V-05"
+          },
+          {
+            "step": "Compare coverage and fill the checklist",
+            "component": "V-05"
+          },
+          {
+            "step": "Add or extend tests",
+            "component": "V-05"
+          },
+          {
+            "step": "Check the edit and test selection",
+            "component": "V-13"
+          },
+          {
+            "step": "Confirm test data is ready",
+            "component": "V-10"
+          },
+          {
+            "step": "Run the selected tests on staging",
+            "component": "V-02"
+          },
+          {
+            "step": "Record a skip when data is missing",
+            "component": "V-14"
+          },
+          {
+            "step": "Collect results",
+            "component": "V-15"
+          },
+          {
+            "step": "Debug failures, fix the test, rerun",
+            "component": "V-06"
+          },
+          {
+            "step": "Review coverage against the story",
+            "component": "V-07"
+          },
+          {
+            "step": "Hand over the short report",
+            "component": "V-05"
+          }
+        ]
+      },
+      {
+        "name": "Run specific tests",
+        "steps": [
+          {
+            "step": "User gives test IDs",
+            "component": "V-02"
+          },
+          {
+            "step": "Check each ID is selected exactly once",
+            "component": "V-13"
+          },
+          {
+            "step": "Run on staging",
+            "component": "V-02"
+          },
+          {
+            "step": "Write the story results summary",
+            "component": "V-15"
+          }
+        ]
+      },
+      {
+        "name": "Debug a failed run",
+        "steps": [
+          {
+            "step": "User gives a run link or local report",
+            "component": "V-03"
+          },
+          {
+            "step": "Find the first action that differs from the story",
+            "component": "V-06"
+          },
+          {
+            "step": "Classify: automation, product, data or environment",
+            "component": "V-06"
+          },
+          {
+            "step": "Fix the test and rerun the affected IDs",
+            "component": "V-02"
+          }
+        ]
+      },
+      {
+        "name": "Review coverage",
+        "steps": [
+          {
+            "step": "User gives a story and changed tests",
+            "component": "V-04"
+          },
+          {
+            "step": "Map requirements to test IDs and check each assertion",
+            "component": "V-07"
+          },
+          {
+            "step": "Compare planned IDs with the actual run",
+            "component": "V-07"
+          },
+          {
+            "step": "Deliver findings, most serious first",
+            "component": "V-07"
+          }
+        ]
+      }
+    ]
+  }
+}
