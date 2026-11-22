@@ -38,7 +38,7 @@ After installing the tools ([F-001](../F-001-tool-setup/README.md#workflow-today
 
 ## Solution
 
-**Component:** a skill, `create-project`. The tester runs `/playwright-sdet:create-project`, or accepts Claude's offer at the end of [F-001](../F-001-tool-setup/README.md). See [Decisions](#decisions).
+**Component:** the second half of the `init-project` skill (`/init-project`), right after [F-001](../F-001-tool-setup/README.md). See [F-001's decisions](../F-001-tool-setup/README.md#decisions).
 
 **Flow** (numbers in brackets are the [Workflow today](#workflow-today) rows each step answers):
 
@@ -79,7 +79,6 @@ One decision per line: the decision, then why.
 - **Run it headed.** The tester sees the browser move. *Confirmed*
 - **Check in two steps: a local page, then the demo site.** A failure then says whether the machine or the site is the problem. *Confirmed*
 - **F-005 solves P-1 only; P-4 was removed.** Problems are solved one at a time, and P-4 hasn't been worked on yet. *Confirmed*
-- **F-005 is a skill, `create-project`, separate from F-001.** Same reasons as [F-001's component decisions](../F-001-tool-setup/README.md#decisions). *Draft*
 - **Answer `npm init playwright` with its own flags, not by typing into its prompts.** The flags are documented and give the same result every time. *Draft*
 
 ## Changelog

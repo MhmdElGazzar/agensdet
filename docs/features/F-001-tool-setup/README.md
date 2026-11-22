@@ -39,7 +39,7 @@ Without Playwright SDET, the tester follows Playwright's installation page and w
 
 ## Solution
 
-**Component:** a skill, `setup-tools`. The tester runs `/playwright-sdet:setup-tools`, or just tells Claude they want to start automation. See [Decisions](#decisions).
+**Component:** the first half of the `init-project` skill. The tester types `/init-project`, or just tells Claude they want to start automation; it runs F-001, then [F-005](../F-005-project-create/README.md). See [Decisions](#decisions).
 
 **Flow** (numbers in brackets are the [Workflow today](#workflow-today) rows each step answers):
 
@@ -83,8 +83,9 @@ One decision per line: the decision, then why.
 - **If a tool can't be installed, stop and ask the tester to install it, then check it.** Company laptops may block installs. *Confirmed*
 - **End F-001 with a version check of each tool.** The full check, the sample test, needs the project from F-005. *Confirmed*
 - **Tell the tester where each thing lives: machine-wide, per project, or shared.** Beginners mix these up, like the JDK versus a project's jars. *Confirmed*
-- **F-001 is a skill, not a command.** A beginner can ask in their own words and Claude starts it; it still shows up as `/playwright-sdet:setup-tools` for those who type it. Not an agent: the tester has to see and approve each step, and an agent works out of view. *Draft*
-- **F-001 and F-005 are two skills, not one.** Each can run alone, for example a second project on a machine that is already set up. *Draft*
+- **`init-project` is built as a skill, not a plain command.** A skill still shows up as `/init-project`, and a beginner can also ask in their own words and Claude starts it; a plain command only runs when typed. Not an agent: the tester has to see and approve each step, and an agent works out of view. *Draft*
+- **One command for the whole setup stage, `/init-project`: it runs F-001, then F-005, up to M1.** The tester starts the stage once; tools already in place are skipped, so it also works for a second project on a machine that is set up. *Confirmed*
+- **Named `init-project`, not `init`.** Claude Code already has `/init` (it writes `CLAUDE.md`), so a tester typing `/init` would get that instead. *Confirmed*
 - **F-001 installs Node only; Git waits for the "Save to git" step.** M1 doesn't need Git, so the tester isn't asked about a tool they won't use yet. *Draft*
 - **Install Node through a version manager (fnm), per user.** It needs no admin rights, and it reads `.nvmrc`, so each project gets its pinned version without breaking other work. Not the nodejs.org installer: it needs admin rights and puts one Node on the whole machine. Not Homebrew or winget alone: also one Node for the whole machine. *Draft*
 
