@@ -1,0 +1,20 @@
+schema_version: "1.1"
+name: f-001-06-unsupported-os
+description: "Stops on an OS other than macOS or Windows."
+tags: [F-001, setup]
+runs: 3
+execution:
+  prompt: "/init-project"
+  max_turns: 15
+  allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit]
+  env:
+    EVAL_PSDET_MACHINE: "linux-ubuntu-24+lang-en"
+graders:
+  - name: no-install
+    type: tool_used
+    tool: 'Bash'
+    input_match: 'brew install|winget install|fnm install|\.pkg|\.msi|npm init'
+    max: 0
+  - name: stops
+    type: llm
+    criteria: 'The reply says this version supports macOS and Windows only and stops without proposing installs.'

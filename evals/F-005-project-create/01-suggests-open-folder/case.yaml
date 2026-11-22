@@ -1,0 +1,20 @@
+schema_version: "1.1"
+name: f-005-01-suggests-open-folder
+description: "With tools ready and an empty open folder, suggests that folder and asks the tester to confirm."
+tags: [F-005, setup]
+runs: 3
+execution:
+  prompt: "/init-project"
+  max_turns: 15
+  allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit]
+  env:
+    EVAL_PSDET_MACHINE: "macos-15-homebrew-node-lts+lang-en"
+graders:
+  - name: no-npm-init
+    type: tool_used
+    tool: 'Bash'
+    input_match: 'npm init'
+    max: 0
+  - name: asks-folder
+    type: llm
+    criteria: 'The reply suggests creating the project in the currently open (empty) folder and asks the tester to confirm or give another folder.'

@@ -5,7 +5,7 @@
 <!-- registry:start (generated from registry.json; do not edit) -->
 | Type | Release | Solves | Stage |
 |------|---------|--------|-------|
-| skill | v0.1 | P-1 | Spec: draft ([board](../../status-matrix.md)) |
+| skill | v0.1 | P-1 | Evals: draft ([board](../../status-matrix.md)) |
 <!-- registry:end -->
 
 ## Problem and users
@@ -111,7 +111,17 @@ Commands run with the project's Node: on the `fnm` route, through `fnm exec --us
 
 ## Quality
 
-_Not started._
+Cases: [`evals/F-005-project-create/`](https://github.com/agentic-testers/playwright-sdet/tree/main/evals/F-005-project-create). How they run: see [F-001's Quality](../F-001-tool-setup/README.md#quality). All **Draft**.
+
+| Case | Checks | How |
+|------|--------|-----|
+| 01 | Empty open folder: suggests it, asks to confirm | automated |
+| 02 | Folder with other files: suggests `playwright-tests` inside it, writes nothing | automated |
+| 03 | Folder already a Playwright project: says so, asks use it or pick another | automated |
+| 04 | After the folder is confirmed: `.nvmrc` with the major, `npm init` with the exact flags, the three config changes, `sample.spec.ts` with the two checks in order | recorded conversation |
+| R5 | Clean Mac and clean Windows: both checks pass headed, M1 is announced | real machine |
+| R6 | No network to the demo site: the machine check passes, Claude says the site didn't respond | real machine |
+| R7 | Consent or cookie dialog on automationexercise.com is handled | real machine |
 
 ## Decisions
 
@@ -134,9 +144,9 @@ One decision per line: the decision, then why.
 - **Check in two steps: a local page, then the demo site.** A failure then says whether the machine or the site is the problem. *Confirmed*
 - **F-005 solves P-1 only; P-4 was removed.** Problems are solved one at a time, and P-4 hasn't been worked on yet. *Confirmed*
 - **Answer `npm init playwright` with its own flags, not by typing into its prompts.** The flags are documented and give the same result every time. *Confirmed*
-- **Suggested folder: the open folder if it's empty, else a new `playwright-tests` folder inside it.** The tester most likely opened the folder they want to work in. *Draft*
-- **Never write into a folder that has other files.** The tester's files stay untouched. *Draft*
-- **The two sample checks run in order, and the site check only runs after the machine check passes.** A site failure then can't hide a machine problem. *Draft*
+- **Suggested folder: the open folder if it's empty, else a new `playwright-tests` folder inside it.** The tester most likely opened the folder they want to work in. *Confirmed*
+- **Never write into a folder that has other files.** The tester's files stay untouched. *Confirmed*
+- **The two sample checks run in order, and the site check only runs after the machine check passes.** A site failure then can't hide a machine problem. *Confirmed*
 
 ## Changelog
 

@@ -1,0 +1,20 @@
+schema_version: "1.1"
+name: f-001-08-node-already-there
+description: "With a Node of the LTS major already the default, installs nothing and shows the summary."
+tags: [F-001, setup]
+runs: 3
+execution:
+  prompt: "/init-project"
+  max_turns: 15
+  allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit]
+  env:
+    EVAL_PSDET_MACHINE: "macos-15-homebrew-node-lts+lang-en"
+graders:
+  - name: no-install
+    type: tool_used
+    tool: 'Bash'
+    input_match: 'brew install|winget install|fnm install|\.pkg|\.msi'
+    max: 0
+  - name: summary
+    type: llm
+    criteria: 'The reply says Node is already at the right version, installs nothing, shows each tool with its version and where it lives, and moves on to creating the project.'

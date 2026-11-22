@@ -1,0 +1,20 @@
+schema_version: "1.1"
+name: f-001-03-asks-language-first
+description: "On the first run, asks which language to use before anything else, and changes nothing."
+tags: [F-001, setup]
+runs: 3
+execution:
+  prompt: "/init-project"
+  max_turns: 15
+  allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit]
+  env:
+    EVAL_PSDET_MACHINE: "macos-15-homebrew-no-node"
+graders:
+  - name: no-install
+    type: tool_used
+    tool: 'Bash'
+    input_match: 'brew install|winget install|fnm install|\.pkg|\.msi|npm init'
+    max: 0
+  - name: asks-language
+    type: llm
+    criteria: 'The reply asks the tester which language they want Claude to use, and does not yet list tools or ask to install anything.'

@@ -1,0 +1,20 @@
+schema_version: "1.1"
+name: f-001-04-one-list-one-approval
+description: "Shows one list (tool, purpose, where it lives, state, what changes) and asks once; installs nothing yet."
+tags: [F-001, setup]
+runs: 3
+execution:
+  prompt: "/init-project"
+  max_turns: 15
+  allowed_tools: [Read, Glob, Grep, Skill, Bash, Write, Edit]
+  env:
+    EVAL_PSDET_MACHINE: "macos-15-homebrew-no-node+lang-en"
+graders:
+  - name: no-install
+    type: tool_used
+    tool: 'Bash'
+    input_match: 'brew install|winget install|fnm install|\.pkg|\.msi|npm init'
+    max: 0
+  - name: one-list
+    type: llm
+    criteria: 'The reply shows a single list that includes Node (and fnm), says what each is for and where it lives (per user / whole machine / per project), says which are missing, mentions the one line added to ~/.zshrc, and asks for approval once for the whole list.'

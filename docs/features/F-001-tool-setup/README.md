@@ -5,7 +5,7 @@
 <!-- registry:start (generated from registry.json; do not edit) -->
 | Type | Release | Solves | Stage |
 |------|---------|--------|-------|
-| skill | v0.1 | P-1 | Spec: draft ([board](../../status-matrix.md)) |
+| skill | v0.1 | P-1 | Evals: draft ([board](../../status-matrix.md)) |
 <!-- registry:end -->
 
 ## Problem and users
@@ -129,7 +129,27 @@ F-001 is the first half of `/init-project`; [F-005](../F-005-project-create/READ
 
 ## Quality
 
-_Not started._
+Cases: [`evals/F-001-tool-setup/`](https://github.com/agentic-testers/playwright-sdet/tree/main/evals/F-001-tool-setup). Automated cases run with `claude plugin eval` (3 runs each) on a fake machine (`EVAL_PSDET_MACHINE`), so nothing is installed. The rest need a recorded conversation or a real machine. All **Draft**.
+
+| Case | Checks | How |
+|------|--------|-----|
+| 01 | Starts when the tester asks in their own words | automated |
+| 02 | Doesn't start for a request in an existing project | automated |
+| 03 | First run: asks the language first, changes nothing | automated |
+| 04 | One list (purpose, where it lives, state, profile line), one approval, nothing installed yet | automated |
+| 05 | Windows without winget: nodejs.org installer, admin password | automated |
+| 06 | Another OS: stops | automated |
+| 07 | macOS 12: stops, says macOS 13 | automated |
+| 08 | Node LTS already there: installs nothing, shows the summary | automated |
+| 09 | Tester approves: `brew install fnm`, then `fnm install <major>`, then the `.zshrc` line, in that order | recorded conversation |
+| 10 | Tester declines the list: nothing changed, says what's missing | recorded conversation |
+| 11 | Tester declines replacing an older Node: moves to the manual route | recorded conversation |
+| R1 | Clean Mac with Homebrew: fnm route; the default Node is unchanged | real machine |
+| R2 | Mac without Homebrew: installer route | real machine |
+| R3 | Clean Windows 11: winget, fnm route, no admin prompt | real machine |
+| R4 | Run `/init-project` again: everything re-checked, nothing reinstalled | real machine |
+
+To run the automated cases: Claude Code 2.1.269 or later, the fake-machine mode built into the skill's scripts, and `--allow-tools Bash Write Edit`.
 
 ## Decisions
 
@@ -158,8 +178,10 @@ One decision per line: the decision, then why.
 - **Named `init-project`, not `init`.** Claude Code already has `/init` (it writes `CLAUDE.md`), so a tester typing `/init` would get that instead. *Confirmed*
 - **F-001 installs Node only; Git waits for the "Save to git" step.** M1 doesn't need Git, so the tester isn't asked about a tool they won't use yet. *Confirmed*
 - **Node is installed by the first option that works: (1) a Node of the LTS major already on the machine is used as is; (2) else fnm, per user (winget on Windows, Homebrew on macOS if it's there), keeping the machine's default Node unchanged; (3) else the nodejs.org installer, which asks for an admin password; (4) else stop and ask the tester to install it.** fnm needs no admin rights and reads `.nvmrc`, but on macOS it needs Homebrew, and blocked laptops need a way out. See [ADR-0004](../../adr/0004-node-install-with-fallbacks.md). *Confirmed*
-- **v0.1 supports macOS and Windows only; on another OS `/init-project` stops.** Every command and fallback is written and tested for those two. *Draft*
-- **Network failures are retried once, then Claude stops and asks.** One retry covers a short glitch without hiding a real proxy problem. *Draft*
+- **v0.1 supports macOS and Windows only; on another OS `/init-project` stops.** Every command and fallback is written and tested for those two. *Confirmed*
+- **Network failures are retried once, then Claude stops and asks.** One retry covers a short glitch without hiding a real proxy problem. *Confirmed*
+- **The skill reads and changes the machine through its own scripts, which have a fake-machine mode for evals.** Evals can then check every route without installing anything. *Draft*
+- **Eval cases live in `evals/` at the repo root, not inside `plugin/`.** Testers install only what they use. If `claude plugin eval` can't read them from there, they move to `plugin/evals/`. *Draft*
 
 ## Changelog
 

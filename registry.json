@@ -15,7 +15,8 @@
         "problem": "approved 2026-11-22",
         "workflow": "approved 2026-11-22",
         "design": "approved 2026-11-22",
-        "spec": "draft"
+        "spec": "approved 2026-11-22",
+        "evals": "draft"
       },
       "notes": "Split from automation-init (2026-11-22): journey step 1 only. Type is a guess; the design stage decides."
     },
@@ -81,7 +82,8 @@
         "problem": "approved 2026-11-22",
         "workflow": "approved 2026-11-22",
         "design": "approved 2026-11-22",
-        "spec": "draft"
+        "spec": "approved 2026-11-22",
+        "evals": "draft"
       },
       "notes": "Split from automation-init (2026-11-22): journey steps 2-4. Decisions so far are in its doc.",
       "doc": "docs/features/F-005-project-create/README.md"
