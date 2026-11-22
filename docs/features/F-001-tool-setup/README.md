@@ -5,7 +5,7 @@
 <!-- registry:start (generated from registry.json; do not edit) -->
 | Type | Release | Solves | Stage |
 |------|---------|--------|-------|
-| command | v0.1 | P-1 | Workflow: draft ([board](../../status-matrix.md)) |
+| skill | v0.1 | P-1 | Design: draft ([board](../../status-matrix.md)) |
 <!-- registry:end -->
 
 ## Problem and users
@@ -22,7 +22,7 @@ Details are in the [persona doc](../../personas/manual-qa.md#problems).
 
 ### Workflow today
 
-Without Playwright SDET, the tester follows Playwright's installation page and web searches on their own. All rows are **Draft**.
+Without Playwright SDET, the tester follows Playwright's installation page and web searches on their own. **Confirmed** (2026-11-22)
 
 | # | What they do | Where it hurts (P-1) |
 |---|--------------|----------------------|
@@ -39,7 +39,19 @@ Without Playwright SDET, the tester follows Playwright's installation page and w
 
 ## Solution
 
-_Not started._
+**Component:** a skill, `setup-tools`. The tester runs `/playwright-sdet:setup-tools`, or just tells Claude they want to start automation. See [Decisions](#decisions).
+
+**Flow** (numbers in brackets are the [Workflow today](#workflow-today) rows each step answers):
+
+1. Claude reads the machine (OS, version, CPU, shell) and saves it in `~/.playwright-sdet/machine.json`. Every command after this fits that machine. [2]
+2. Claude checks which tools are there and at which version. [3, 4]
+3. Claude shows one list: each tool, what it's for, where it lives (machine-wide or per project), and whether it's missing, old, or fine. **The tester approves the list once.** [1, 3, 4]
+4. If Node is older than the LTS, **Claude asks separately before upgrading it.** [3]
+5. Claude installs what's missing with the commands for this machine.
+6. If an install fails or is blocked, Claude stops, gives the tester the manual steps for their OS, waits, then checks again.
+7. Claude runs a version check of each tool and shows the result. [5]
+
+**Hands over to [F-005](../F-005-project-create/README.md):** `machine.json`, and a working Node and npm.
 
 ## Behavior
 
@@ -71,6 +83,10 @@ One decision per line: the decision, then why.
 - **If a tool can't be installed, stop and ask the tester to install it, then check it.** Company laptops may block installs. *Confirmed*
 - **End F-001 with a version check of each tool.** The full check, the sample test, needs the project from F-005. *Confirmed*
 - **Tell the tester where each thing lives: machine-wide, per project, or shared.** Beginners mix these up, like the JDK versus a project's jars. *Confirmed*
+- **F-001 is a skill, not a command.** A beginner can ask in their own words and Claude starts it; it still shows up as `/playwright-sdet:setup-tools` for those who type it. Not an agent: the tester has to see and approve each step, and an agent works out of view. *Draft*
+- **F-001 and F-005 are two skills, not one.** Each can run alone, for example a second project on a machine that is already set up. *Draft*
+- **F-001 installs Node only; Git waits for the "Save to git" step.** M1 doesn't need Git, so the tester isn't asked about a tool they won't use yet. *Draft*
+- **Install Node through a version manager (fnm), per user.** It needs no admin rights, and it reads `.nvmrc`, so each project gets its pinned version without breaking other work. Not the nodejs.org installer: it needs admin rights and puts one Node on the whole machine. Not Homebrew or winget alone: also one Node for the whole machine. *Draft*
 
 ## Changelog
 

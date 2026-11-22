@@ -4,7 +4,7 @@
     {
       "id": "F-001",
       "name": "tool-setup",
-      "type": "command",
+      "type": "skill",
       "release": "v0.1",
       "doc": "docs/features/F-001-tool-setup/README.md",
       "problems": [
@@ -13,7 +13,8 @@
       "built_from": [],
       "stages": {
         "problem": "approved 2026-11-22",
-        "workflow": "draft"
+        "workflow": "approved 2026-11-22",
+        "design": "draft"
       },
       "notes": "Split from automation-init (2026-11-22): journey step 1 only. Type is a guess; the design stage decides."
     },
@@ -69,7 +70,7 @@
     {
       "id": "F-005",
       "name": "project-create",
-      "type": "command",
+      "type": "skill",
       "release": "v0.1",
       "problems": [
         "P-1"
@@ -77,7 +78,8 @@
       "built_from": [],
       "stages": {
         "problem": "approved 2026-11-22",
-        "workflow": "draft"
+        "workflow": "approved 2026-11-22",
+        "design": "draft"
       },
       "notes": "Split from automation-init (2026-11-22): journey steps 2-4. Decisions so far are in its doc.",
       "doc": "docs/features/F-005-project-create/README.md"
