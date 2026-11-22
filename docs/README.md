@@ -1,4 +1,4 @@
-# agensdet
+# AgenSDET
 
 A Claude plugin that helps QA engineers who are starting test automation build a working foundation, from an empty repo to tests running in Azure Pipelines with a readable report.
 
