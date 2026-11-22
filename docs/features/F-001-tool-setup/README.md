@@ -5,7 +5,7 @@
 <!-- registry:start (generated from registry.json; do not edit) -->
 | Type | Release | Solves | Stage |
 |------|---------|--------|-------|
-| command | v0.1 | P-1 | Workflow: not-started ([board](../../status-matrix.md)) |
+| command | v0.1 | P-1 | Workflow: draft ([board](../../status-matrix.md)) |
 <!-- registry:end -->
 
 ## Problem and users
@@ -22,7 +22,15 @@ Details are in the [persona doc](../../personas/manual-qa.md#problems).
 
 ### Workflow today
 
-_Not started._
+Without Playwright SDET, the tester follows Playwright's installation page and web searches on their own. All rows are **Draft**.
+
+| # | What they do | Where it hurts (P-1) |
+|---|--------------|----------------------|
+| 1 | Open Playwright's installation page. | It assumes Node.js is installed and doesn't say how to install it. |
+| 2 | Search how to install Node.js, Git and an editor. | Guides mix macOS and Windows commands, and some are old. |
+| 3 | Install Node.js. | Doesn't know which version to pick, or whether an older Node already on the machine is enough or will break other work. |
+| 4 | Install Git. | Doesn't know whether it's needed now or later. |
+| 5 | Move on to creating the project ([F-005](../F-005-project-create/README.md#workflow-today)). | Never checked that the tools work; finds out only when a later command fails. |
 
 ### What success looks like
 

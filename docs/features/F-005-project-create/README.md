@@ -5,7 +5,7 @@
 <!-- registry:start (generated from registry.json; do not edit) -->
 | Type | Release | Solves | Stage |
 |------|---------|--------|-------|
-| command | v0.1 | P-1 | Workflow: not-started ([board](../../status-matrix.md)) |
+| command | v0.1 | P-1 | Workflow: draft ([board](../../status-matrix.md)) |
 <!-- registry:end -->
 
 ## Problem and users
@@ -22,7 +22,14 @@ Details are in the [persona doc](../../personas/manual-qa.md#problems).
 
 ### Workflow today
 
-_Not started._
+After installing the tools ([F-001](../F-001-tool-setup/README.md#workflow-today)), the tester follows Playwright's installation page. What the commands do is **Confirmed** from `create-playwright` 1.17.139; where it hurts is **Draft**.
+
+| # | What they do | Where it hurts (P-1) |
+|---|--------------|----------------------|
+| 1 | Make a folder and run `npm init playwright@latest`. | It asks five questions they can't judge: TypeScript or JavaScript, where to put the tests, add a GitHub Actions workflow, install browsers, install OS dependencies (needs admin rights). |
+| 2 | Wait for the browsers to download. | It downloads three browsers (Chromium, Firefox, WebKit) when one is enough to start. |
+| 3 | Open the files it created: `playwright.config.ts`, `tests/example.spec.ts`, `package.json`. | Doesn't know which file matters, or what the config settings do. |
+| 4 | Run `npx playwright test`. | It runs without showing a browser, in all three browsers, against playwright.dev, not a site they know. The result is a report they have to open. |
 
 ### What success looks like
 
