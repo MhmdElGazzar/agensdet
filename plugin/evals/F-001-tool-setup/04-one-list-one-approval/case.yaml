@@ -13,8 +13,15 @@ graders:
   - name: no-install
     type: tool_used
     tool: 'Bash'
-    input_match: 'brew install|winget install|fnm install|\.pkg|\.msi|npm init'
+    input_match: 'install-node\.sh|brew install|winget install|fnm install|\.pkg|\.msi|npm init'
+    min: 0
     max: 0
-  - name: one-list
+  - name: mentions-fnm
+    type: regex
+    pattern: 'fnm'
+  - name: mentions-profile-line
+    type: regex
+    pattern: 'zshrc'
+  - name: asks-once
     type: llm
-    criteria: 'The reply shows a single list that includes Node (and fnm), says what each is for and where it lives (per user / whole machine / per project), says which are missing, mentions the one line added to ~/.zshrc, and asks for approval once for the whole list.'
+    criteria: 'The reply asks the tester for approval to install the listed tools.'

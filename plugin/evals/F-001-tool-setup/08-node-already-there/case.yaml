@@ -13,8 +13,12 @@ graders:
   - name: no-install
     type: tool_used
     tool: 'Bash'
-    input_match: 'brew install|winget install|fnm install|\.pkg|\.msi'
+    input_match: 'install-node\.sh|brew install|winget install|fnm install|\.pkg|\.msi|npm init'
+    min: 0
     max: 0
-  - name: summary
+  - name: shows-version
+    type: regex
+    pattern: 'v24\.'
+  - name: nothing-to-install
     type: llm
-    criteria: 'The reply says Node is already at the right version, installs nothing, shows each tool with its version and where it lives, and moves on to creating the project.'
+    criteria: 'The reply says nothing needs to be installed because Node is already there, and then moves on to the project (for example by suggesting a folder).'

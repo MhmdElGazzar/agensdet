@@ -5,7 +5,7 @@
 <!-- registry:start (generated from registry.json; do not edit) -->
 | Type | Release | Solves | Stage |
 |------|---------|--------|-------|
-| skill | v0.1 | P-1 | Evals: draft ([board](../../status-matrix.md)) |
+| skill | v0.1 | P-1 | Build: draft ([board](../../status-matrix.md)) |
 <!-- registry:end -->
 
 ## Problem and users
@@ -107,7 +107,7 @@ F-001 is the first half of `/init-project`; [F-005](../F-005-project-create/READ
 
 | Situation | What Claude does |
 |-----------|------------------|
-| The OS is not macOS or Windows | Stops: v0.1 supports macOS and Windows only. |
+| The OS is not macOS or Windows | Stops: v0.1 supports macOS and Windows only. Doesn't suggest other ways to install. |
 | The OS is older than the minimum | Stops and says the minimum version. |
 | nodejs.org can't be reached | Retries once; then stops and asks the tester to check their connection or proxy, and to run `/init-project` again. |
 | The tester declines the list | Stops; nothing was changed. Says what is missing. |
@@ -129,7 +129,7 @@ F-001 is the first half of `/init-project`; [F-005](../F-005-project-create/READ
 
 ## Quality
 
-Cases: [`evals/F-001-tool-setup/`](https://github.com/agentic-testers/playwright-sdet/tree/main/evals/F-001-tool-setup). Automated cases run with `claude plugin eval` (3 runs each) on a fake machine (`EVAL_PSDET_MACHINE`), so nothing is installed. The rest need a recorded conversation or a real machine. All **Draft**.
+Cases: [`plugin/evals/F-001-tool-setup/`](https://github.com/agentic-testers/playwright-sdet/tree/main/plugin/evals/F-001-tool-setup). Automated cases run with `claude plugin eval` (3 runs each) on a fake machine (`EVAL_PSDET_MACHINE`), so nothing is installed. The rest need a recorded conversation or a real machine. **Confirmed** (2026-11-22).
 
 | Case | Checks | How |
 |------|--------|-----|
@@ -149,7 +149,7 @@ Cases: [`evals/F-001-tool-setup/`](https://github.com/agentic-testers/playwright
 | R3 | Clean Windows 11: winget, fnm route, no admin prompt | real machine |
 | R4 | Run `/init-project` again: everything re-checked, nothing reinstalled | real machine |
 
-To run the automated cases: Claude Code 2.1.269 or later, the fake-machine mode built into the skill's scripts, and `--allow-tools Bash Write Edit`.
+To run the automated cases: `claude plugin eval plugin --allow-tools Bash Write Edit --scaffold` (Claude Code 2.1.269 or later); the skill's scripts run in fake-machine mode.
 
 ## Decisions
 
@@ -180,8 +180,8 @@ One decision per line: the decision, then why.
 - **Node is installed by the first option that works: (1) a Node of the LTS major already on the machine is used as is; (2) else fnm, per user (winget on Windows, Homebrew on macOS if it's there), keeping the machine's default Node unchanged; (3) else the nodejs.org installer, which asks for an admin password; (4) else stop and ask the tester to install it.** fnm needs no admin rights and reads `.nvmrc`, but on macOS it needs Homebrew, and blocked laptops need a way out. See [ADR-0004](../../adr/0004-node-install-with-fallbacks.md). *Confirmed*
 - **v0.1 supports macOS and Windows only; on another OS `/init-project` stops.** Every command and fallback is written and tested for those two. *Confirmed*
 - **Network failures are retried once, then Claude stops and asks.** One retry covers a short glitch without hiding a real proxy problem. *Confirmed*
-- **The skill reads and changes the machine through its own scripts, which have a fake-machine mode for evals.** Evals can then check every route without installing anything. *Draft*
-- **Eval cases live in `evals/` at the repo root, not inside `plugin/`.** Testers install only what they use. If `claude plugin eval` can't read them from there, they move to `plugin/evals/`. *Draft*
+- **The skill reads and changes the machine through its own scripts, which have a fake-machine mode for evals.** Evals can then check every route without installing anything. *Confirmed*
+- **Eval cases live in `plugin/evals/` (was: `evals/` at the repo root).** `claude plugin eval` only reads cases inside the plugin folder; testers download them too, but they're small text files. *Confirmed*
 
 ## Changelog
 

@@ -33,10 +33,10 @@ Two things are kept apart ([ADR-0003](docs/adr/0003-feature-doc-separate-from-wo
 | # | Stage | Skill | Writes in the feature doc |
 |---|-------|-------|---------------------------|
 | 1 | Problem: who the user is, what hurts, what success looks like | `feature-problem` | Problem and users → Users, Problems, What success looks like |
-| 2 | Workflow: what the user does today, step by step | `feature-workflow` (TBD) | Problem and users → Workflow today |
-| 3 | Design: component type, flow, alternatives (ADR when needed) | `feature-design` (TBD) | Solution, Decisions |
-| 4 | Spec: trigger, inputs, outputs, tools, failure behavior | `feature-spec` (TBD) | Behavior |
-| 5 | Evals: test cases written from the spec | `feature-evals` (TBD) | Quality (summary; cases in `evals/<id>-<name>/`) |
+| 2 | Workflow: what the user does today, step by step | `feature-workflow` | Problem and users → Workflow today |
+| 3 | Design: component type, flow, alternatives (ADR when needed) | `feature-design` | Solution, Decisions |
+| 4 | Spec: trigger, inputs, outputs, tools, failure behavior | `feature-spec` | Behavior |
+| 5 | Evals: test cases written from the spec | `feature-evals` | Quality (summary; cases in `plugin/evals/<id>-<name>/`) |
 | 6 | Build: the code, until its evals pass | — | Behavior, if something changed while building |
 | 7 | Release: docs, CHANGELOG, tried on a real project | `feature-release` (TBD) | Changelog |
 

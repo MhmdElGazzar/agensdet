@@ -5,7 +5,7 @@
 <!-- registry:start (generated from registry.json; do not edit) -->
 | Type | Release | Solves | Stage |
 |------|---------|--------|-------|
-| skill | v0.1 | P-1 | Evals: draft ([board](../../status-matrix.md)) |
+| skill | v0.1 | P-1 | Build: draft ([board](../../status-matrix.md)) |
 <!-- registry:end -->
 
 ## Problem and users
@@ -70,18 +70,18 @@ F-005 is the second half of `/init-project`; it starts only when [F-001](../F-00
 A project folder containing:
 
 - `.nvmrc`: the LTS major only, for example `24`.
-- What `create-playwright` makes: `package.json`, `playwright.config.ts`, `tests/`, `.gitignore`, `node_modules/`, and Chromium in Playwright's shared browser folder.
+- What `create-playwright` makes: `package.json`, `playwright.config.ts`, `.gitignore`, `node_modules/`, and Chromium in Playwright's shared browser folder. With `--no-examples` it makes no `tests/` folder; Claude creates it for the sample test.
 - `playwright.config.ts` changed in three places: `baseURL: 'https://www.automationexercise.com'`, `trace: 'retain-on-failure'`, `screenshot: 'only-on-failure'`.
 - `tests/sample.spec.ts`, two tests run in order (`test.describe.serial`), so the second runs only if the first passes:
   1. **Machine check**: opens a local page (`page.setContent`) and sees its heading. No network.
-  2. **Test Case 7: Verify Test Cases Page**: opens the home page and checks it's visible, clicks the menu link "Test Cases", checks the URL ends with `/test_cases` and the "Test Cases" heading is visible.
+  2. **Test Case 7: Verify Test Cases Page**: blocks the site's ad requests, opens the home page and checks it's visible, clicks the menu link "Test Cases", checks the URL ends with `/test_cases` and the "Test Cases" heading is visible.
 - For the tester: what each main file is for, the four config settings, how to run the tests again (`npx playwright test --headed`) and open the report (`npx playwright show-report`).
 
 ### Steps
 
 Commands run with the project's Node: on the `fnm` route, through `fnm exec --using=.nvmrc`.
 
-1. Suggest a folder: the open folder if it's empty, else a new `playwright-tests` folder inside it. **The tester confirms or gives another.**
+1. If the open folder is already a Playwright project, say so and **ask: use it, or create a new one elsewhere**. Otherwise suggest a folder: the open folder if it's empty, else a new `playwright-tests` folder inside it. Empty means nothing, or only `.git`, `.vscode`, `.claude`, `.idea` or `.DS_Store`. **The tester confirms or gives another.**
 2. Write `.nvmrc`.
 3. Run `npm init playwright@latest -- --quiet --lang=TypeScript --browser=chromium --no-examples`.
 4. Change the three config settings.
@@ -106,12 +106,12 @@ Commands run with the project's Node: on the `fnm` route, through `fnm exec --us
 
 ### To verify during build
 
-- A cookie or consent dialog on automationexercise.com: whether it appears, and that the test closes it.
-- `--quiet` makes `tests` the test folder in an empty project (it picks `e2e` when `tests` already exists).
+- ~~A cookie or consent dialog on automationexercise.com~~ Found 2026-11-22: no consent dialog from Egypt, but a full-page Google ad (`#google_vignette`) can cover the menu; blocking ad requests fixed it (10 of 10 runs passed). Still to check from the EU, where a consent dialog may show.
+- ~~`--quiet` makes `tests` the test folder~~ Verified 2026-11-22: `testDir: './tests'`.
 
 ## Quality
 
-Cases: [`evals/F-005-project-create/`](https://github.com/agentic-testers/playwright-sdet/tree/main/evals/F-005-project-create). How they run: see [F-001's Quality](../F-001-tool-setup/README.md#quality). All **Draft**.
+Cases: [`plugin/evals/F-005-project-create/`](https://github.com/agentic-testers/playwright-sdet/tree/main/plugin/evals/F-005-project-create). How they run: see [F-001's Quality](../F-001-tool-setup/README.md#quality). **Confirmed** (2026-11-22).
 
 | Case | Checks | How |
 |------|--------|-----|
@@ -121,7 +121,7 @@ Cases: [`evals/F-005-project-create/`](https://github.com/agentic-testers/playwr
 | 04 | After the folder is confirmed: `.nvmrc` with the major, `npm init` with the exact flags, the three config changes, `sample.spec.ts` with the two checks in order | recorded conversation |
 | R5 | Clean Mac and clean Windows: both checks pass headed, M1 is announced | real machine |
 | R6 | No network to the demo site: the machine check passes, Claude says the site didn't respond | real machine |
-| R7 | Consent or cookie dialog on automationexercise.com is handled | real machine |
+| R7 | Consent dialog (EU) and full-page ads on automationexercise.com are handled | real machine |
 
 ## Decisions
 
@@ -146,6 +146,8 @@ One decision per line: the decision, then why.
 - **Answer `npm init playwright` with its own flags, not by typing into its prompts.** The flags are documented and give the same result every time. *Confirmed*
 - **Suggested folder: the open folder if it's empty, else a new `playwright-tests` folder inside it.** The tester most likely opened the folder they want to work in. *Confirmed*
 - **Never write into a folder that has other files.** The tester's files stay untouched. *Confirmed*
+- **The sample test blocks the demo site's ad requests.** A full-page ad covered the menu and failed the first real run; ads aren't part of the test. *Draft*
+- **A folder with only `.git`, `.vscode`, `.claude`, `.idea` or `.DS_Store` counts as empty.** Editors and git create these on their own; found while running the evals. *Draft*
 - **The two sample checks run in order, and the site check only runs after the machine check passes.** A site failure then can't hide a machine problem. *Confirmed*
 
 ## Changelog

@@ -13,7 +13,8 @@ graders:
   - name: no-install
     type: tool_used
     tool: 'Bash'
-    input_match: 'brew install|winget install|fnm install|\.pkg|\.msi|npm init'
+    input_match: 'install-node\.sh|brew install|winget install|fnm install|\.pkg|\.msi|npm init'
+    min: 0
     max: 0
   - name: asks-language
     type: llm

@@ -8,3 +8,6 @@ planning/
 existing/
 website/build/
 website/.docusaurus/
+
+# Eval run results (local)
+plugin/evals/results/
