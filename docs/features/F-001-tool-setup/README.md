@@ -5,7 +5,7 @@
 <!-- registry:start (generated from registry.json; do not edit) -->
 | Type | Release | Solves | Stage |
 |------|---------|--------|-------|
-| command | v0.1 | P-1 | Problem: draft ([board](../../status-matrix.md)) |
+| command | v0.1 | P-1 | Workflow: not-started ([board](../../status-matrix.md)) |
 <!-- registry:end -->
 
 ## Problem and users

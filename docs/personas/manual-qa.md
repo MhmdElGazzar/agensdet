@@ -39,7 +39,7 @@ Generated from `registry.json`.
 <!-- solutions:start (generated from registry.json; do not edit) -->
 | Problem | Solved by | Stage |
 |---------|-----------|-------|
-| P-1 | [F-001 tool-setup](../features/F-001-tool-setup/README.md) | Problem: draft |
+| P-1 | [F-001 tool-setup](../features/F-001-tool-setup/README.md) | Workflow: not-started |
 | P-1 | [F-005 project-create](../features/F-005-project-create/README.md) | Problem: not-started |
 | P-1 | F-006 project-structure | Problem: not-started |
 | P-1 | F-007 ci-pipeline | Problem: not-started |

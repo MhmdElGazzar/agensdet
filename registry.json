@@ -12,7 +12,7 @@
       ],
       "built_from": [],
       "stages": {
-        "problem": "draft"
+        "problem": "approved 2026-11-22"
       },
       "notes": "Split from automation-init (2026-11-22): journey step 1 only. Type is a guess; the design stage decides."
     },

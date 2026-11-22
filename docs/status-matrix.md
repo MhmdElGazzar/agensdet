@@ -8,7 +8,7 @@ The feature board. ✅ approved, 🟡 draft, ❌ not started. A feature's stage 
 |----|---------|------|---------|---|---|---|---|---|---|---|-------|
 | F-004 | quality-review | skill | TBD | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
 | F-007 | ci-pipeline | command | TBD | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
-| F-001 | [tool-setup](features/F-001-tool-setup/README.md) | command | v0.1 | 🟡 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: draft |
+| F-001 | [tool-setup](features/F-001-tool-setup/README.md) | command | v0.1 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Workflow: not-started |
 | F-002 | automation-run | command | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
 | F-003 | test-design-basics | skill | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
 | F-005 | [project-create](features/F-005-project-create/README.md) | command | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
@@ -16,7 +16,8 @@ The feature board. ✅ approved, 🟡 draft, ❌ not started. A feature's stage 
 
 ## By stage
 
-- Problem: 7
+- Problem: 6
+- Workflow: 1
 
 In progress now: 1 (F-001)
 
