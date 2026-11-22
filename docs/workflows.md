@@ -4,17 +4,9 @@
 
 The plugin's main user journeys. A step no feature covers is a gap.
 
-## First test to CI (v0.1 release check)
+## First test (P-1)
 
-```mermaid
-flowchart LR
-  w0s0["Create the project structure in an empty repo<br/>F-001 automation-init"]
-  w0s1["Write the first test<br/>F-003 test-design-basics"]
-  w0s0 --> w0s1
-  w0s2["Run it and read the summary<br/>F-002 automation-run"]
-  w0s1 --> w0s2
-  w0s3["Push; Azure Pipelines runs it and publishes the report<br/>F-001 automation-init"]
-  w0s2 --> w0s3
-  classDef gap stroke:#c62828,stroke-width:2px,stroke-dasharray:4 4
-```
+![First test (P-1)](assets/journey.svg)
+
+Red dashed: no feature covers the step yet (pick a scenario, find the elements). Grey dashed: done by hand. Faded: later, not part of the first goal.
 

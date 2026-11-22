@@ -2,22 +2,9 @@
 
 # Component map
 
-agensdet's features and who uses whom. An arrow from A to B means A uses B.
+AgenSDET's features by type. An arrow from A to B means A uses B.
 
-```mermaid
-flowchart LR
-  subgraph commands["Commands"]
-    n_F_001["F-001 automation-init<br/>Problem: draft"]:::active
-    n_F_002["F-002 automation-run<br/>Problem: not-started"]:::todo
-  end
-  subgraph skills["Skills"]
-    n_F_003["F-003 test-design-basics<br/>Problem: not-started"]:::todo
-  end
-  classDef done stroke:#2e7d32,stroke-width:2px
-  classDef active stroke:#f9a825,stroke-width:2px
-  classDef todo stroke-dasharray:4 4
-  classDef parked stroke:#9e9e9e,stroke-dasharray:2 6
-```
+![Component map](assets/component-map.svg)
 
 Border: green = ready or released, yellow = in progress, dashed = not started.
 

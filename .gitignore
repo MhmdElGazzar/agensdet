@@ -6,3 +6,5 @@ node_modules/
 planning/
 .claude/
 existing/
+website/build/
+website/.docusaurus/

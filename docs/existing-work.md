@@ -2,57 +2,13 @@
 
 # Existing work (audit)
 
-Source: existing/vas-framework, exported from Azure DevOps VAS/VAS_Framework branch stagging-testing-revamp-v2 at commit 79315ce (2026-11-21). The zip (branch stagging-testing-revamp, commit 3e6e49b, 2026-11-19) is the older version.. The audit notes are kept locally in `planning/00-existing-work.md`. These components are reference material for agensdet's features, not agensdet features.
+Source: existing/vas-framework, exported from Azure DevOps VAS/VAS_Framework branch stagging-testing-revamp-v2 at commit 79315ce (2026-11-21). The zip (branch stagging-testing-revamp, commit 3e6e49b, 2026-11-19) is the older version.. The audit notes are kept locally in `planning/00-existing-work.md`. These components are reference material for AgenSDET's features, not AgenSDET features.
 
 ## Component map
 
-```mermaid
-flowchart LR
-  subgraph commands["Commands"]
-    n_V_01["V-01 vas-command-automate<br/>Spec"]:::done
-    n_V_02["V-02 vas-command-run<br/>Spec"]:::done
-    n_V_03["V-03 vas-command-debug<br/>Spec"]:::done
-    n_V_04["V-04 vas-command-review<br/>Spec"]:::done
-  end
-  subgraph skills["Skills"]
-    n_V_05["V-05 vas-skill-automate<br/>Spec"]:::done
-    n_V_06["V-06 vas-skill-debug<br/>Spec"]:::done
-    n_V_07["V-07 vas-skill-review<br/>Spec"]:::done
-    n_V_08["V-08 vas-skill-maintainability<br/>Spec"]:::done
-    n_V_09["V-09 vas-skill-reliability<br/>Spec"]:::done
-    n_V_10["V-10 vas-skill-readiness<br/>Spec"]:::done
-    n_V_11["V-11 vas-skill-scalability<br/>Spec"]:::done
-    n_V_12["V-12 vas-skill-testability<br/>Spec"]:::done
-  end
-  subgraph hooks["Hooks"]
-    n_V_13["V-13 vas-hook-check<br/>Spec"]:::done
-    n_V_14["V-14 vas-hook-data<br/>Spec"]:::done
-    n_V_15["V-15 vas-hook-report<br/>Spec"]:::done
-  end
-  n_V_01 --> n_V_05
-  n_V_02 --> n_V_13
-  n_V_02 --> n_V_15
-  n_V_03 --> n_V_06
-  n_V_04 --> n_V_07
-  n_V_05 --> n_V_12
-  n_V_05 --> n_V_08
-  n_V_05 --> n_V_11
-  n_V_05 --> n_V_10
-  n_V_05 --> n_V_13
-  n_V_05 --> n_V_02
-  n_V_05 --> n_V_14
-  n_V_05 --> n_V_06
-  n_V_05 --> n_V_09
-  n_V_05 --> n_V_07
-  n_V_06 --> n_V_02
-  n_V_10 --> n_V_13
-  classDef done stroke:#2e7d32,stroke-width:2px
-  classDef active stroke:#f9a825,stroke-width:2px
-  classDef todo stroke-dasharray:4 4
-  classDef parked stroke:#9e9e9e,stroke-dasharray:2 6
-```
+![Existing components](assets/existing-map.svg)
 
-Border: green = works, yellow = in progress, dashed = idea, grey dashed = deferred.
+Border: green = works, yellow = in progress, dashed = idea, faint = deferred. An arrow from A to B means A uses B.
 
 ### Orphans
 
@@ -62,77 +18,19 @@ None.
 
 ### Automate a story on staging
 
-```mermaid
-flowchart LR
-  x0s0["User gives an Azure story link<br/>V-01 vas-command-automate"]
-  x0s1["Read the story and acceptance criteria<br/>V-05 vas-skill-automate"]
-  x0s0 --> x0s1
-  x0s2["Locate backend spec, frontend and existing tests<br/>V-05 vas-skill-automate"]
-  x0s1 --> x0s2
-  x0s3["Compare coverage and fill the checklist<br/>V-05 vas-skill-automate"]
-  x0s2 --> x0s3
-  x0s4["Add or extend tests<br/>V-05 vas-skill-automate"]
-  x0s3 --> x0s4
-  x0s5["Check the edit and test selection<br/>V-13 vas-hook-check"]
-  x0s4 --> x0s5
-  x0s6["Confirm test data is ready<br/>V-10 vas-skill-readiness"]
-  x0s5 --> x0s6
-  x0s7["Run the selected tests on staging<br/>V-02 vas-command-run"]
-  x0s6 --> x0s7
-  x0s8["Record a skip when data is missing<br/>V-14 vas-hook-data"]
-  x0s7 --> x0s8
-  x0s9["Collect results<br/>V-15 vas-hook-report"]
-  x0s8 --> x0s9
-  x0s10["Debug failures, fix the test, rerun<br/>V-06 vas-skill-debug"]
-  x0s9 --> x0s10
-  x0s11["Review coverage against the story<br/>V-07 vas-skill-review"]
-  x0s10 --> x0s11
-  x0s12["Hand over the short report<br/>V-05 vas-skill-automate"]
-  x0s11 --> x0s12
-  classDef gap stroke:#c62828,stroke-width:2px,stroke-dasharray:4 4
-```
+![Automate a story on staging](assets/existing-workflow-1.svg)
 
 ### Run specific tests
 
-```mermaid
-flowchart LR
-  x1s0["User gives test IDs<br/>V-02 vas-command-run"]
-  x1s1["Check each ID is selected exactly once<br/>V-13 vas-hook-check"]
-  x1s0 --> x1s1
-  x1s2["Run on staging<br/>V-02 vas-command-run"]
-  x1s1 --> x1s2
-  x1s3["Write the story results summary<br/>V-15 vas-hook-report"]
-  x1s2 --> x1s3
-  classDef gap stroke:#c62828,stroke-width:2px,stroke-dasharray:4 4
-```
+![Run specific tests](assets/existing-workflow-2.svg)
 
 ### Debug a failed run
 
-```mermaid
-flowchart LR
-  x2s0["User gives a run link or local report<br/>V-03 vas-command-debug"]
-  x2s1["Find the first action that differs from the story<br/>V-06 vas-skill-debug"]
-  x2s0 --> x2s1
-  x2s2["Classify: automation, product, data or environment<br/>V-06 vas-skill-debug"]
-  x2s1 --> x2s2
-  x2s3["Fix the test and rerun the affected IDs<br/>V-02 vas-command-run"]
-  x2s2 --> x2s3
-  classDef gap stroke:#c62828,stroke-width:2px,stroke-dasharray:4 4
-```
+![Debug a failed run](assets/existing-workflow-3.svg)
 
 ### Review coverage
 
-```mermaid
-flowchart LR
-  x3s0["User gives a story and changed tests<br/>V-04 vas-command-review"]
-  x3s1["Map requirements to test IDs and check each assertion<br/>V-07 vas-skill-review"]
-  x3s0 --> x3s1
-  x3s2["Compare planned IDs with the actual run<br/>V-07 vas-skill-review"]
-  x3s1 --> x3s2
-  x3s3["Deliver findings, most serious first<br/>V-07 vas-skill-review"]
-  x3s2 --> x3s3
-  classDef gap stroke:#c62828,stroke-width:2px,stroke-dasharray:4 4
-```
+![Review coverage](assets/existing-workflow-4.svg)
 
 ## Evidence matrix
 

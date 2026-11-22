@@ -1,0 +1,2 @@
+/* Wide tables (status matrix, decisions) scroll instead of squeezing. */
+.markdown table { display: block; overflow-x: auto; }

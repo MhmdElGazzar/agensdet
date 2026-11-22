@@ -3,20 +3,18 @@
   "features": [
     {
       "id": "F-001",
-      "name": "automation-init",
+      "name": "tool-setup",
       "type": "command",
       "release": "v0.1",
-      "doc": "docs/features/F-001-automation-init/README.md",
+      "doc": "docs/features/F-001-tool-setup/README.md",
       "problems": [
-        "P-1",
-        "P-3"
+        "P-1"
       ],
-      "built_from": [
-        "V-14"
-      ],
+      "built_from": [],
       "stages": {
         "problem": "draft"
-      }
+      },
+      "notes": "Split from automation-init (2026-11-22): journey step 1 only. Type is a guess; the design stage decides."
     },
     {
       "id": "F-002",
@@ -47,27 +45,161 @@
         "V-08"
       ],
       "stages": {}
+    },
+    {
+      "id": "F-004",
+      "name": "quality-review",
+      "type": "skill",
+      "release": "TBD",
+      "problems": [
+        "P-5"
+      ],
+      "built_from": [
+        "V-07",
+        "V-08",
+        "V-09",
+        "V-10",
+        "V-11",
+        "V-12"
+      ],
+      "stages": {},
+      "notes": "Idea from the user (2026-11-22): the plugin reviews its own output against a quality standard defined in the project. Type is a guess; the design stage decides. Not started: WIP limit (F-001 in progress)."
+    },
+    {
+      "id": "F-005",
+      "name": "project-create",
+      "type": "command",
+      "release": "v0.1",
+      "problems": [
+        "P-1",
+        "P-4"
+      ],
+      "built_from": [],
+      "stages": {},
+      "notes": "Split from automation-init (2026-11-22): journey steps 2-4. Decisions so far are in its doc.",
+      "doc": "docs/features/F-005-project-create/README.md"
+    },
+    {
+      "id": "F-006",
+      "name": "project-structure",
+      "type": "command",
+      "release": "v0.1",
+      "problems": [
+        "P-1",
+        "P-3",
+        "P-5"
+      ],
+      "built_from": [
+        "V-14"
+      ],
+      "stages": {},
+      "notes": "Split from automation-init (2026-11-22): journey step 4, where pages, tests, data and URLs go; one standard for the team."
+    },
+    {
+      "id": "F-007",
+      "name": "ci-pipeline",
+      "type": "command",
+      "release": "TBD",
+      "problems": [
+        "P-1"
+      ],
+      "built_from": [],
+      "stages": {},
+      "notes": "Split from automation-init (2026-11-22): journey step 12, run the tests in Azure Pipelines. Proposed to come after P-1's first success."
     }
   ],
   "workflows": [
     {
-      "name": "First test to CI (v0.1 release check)",
-      "steps": [
+      "name": "First test (P-1)",
+      "stages": [
         {
-          "step": "Create the project structure in an empty repo",
-          "feature": "F-001"
+          "name": "0 · Before you start",
+          "steps": [
+            {
+              "step": "Get Claude Code (VS Code recommended)",
+              "manual": true
+            },
+            {
+              "step": "Install AgenSDET",
+              "manual": true
+            }
+          ]
         },
         {
-          "step": "Write the first test",
-          "feature": "F-003"
+          "name": "1 · Setup",
+          "milestone": "M1: tools installed and verified",
+          "steps": [
+            {
+              "step": "Install the tools",
+              "feature": "F-001"
+            },
+            {
+              "step": "Create the project",
+              "feature": "F-005"
+            },
+            {
+              "step": "Understand its files",
+              "feature": "F-005"
+            },
+            {
+              "step": "Run a sample test",
+              "feature": "F-005"
+            }
+          ]
         },
         {
-          "step": "Run it and read the summary",
-          "feature": "F-002"
+          "name": "2 · First test",
+          "steps": [
+            {
+              "step": "Organize the project",
+              "feature": "F-006"
+            },
+            {
+              "step": "Pick a scenario"
+            },
+            {
+              "step": "Find the elements"
+            },
+            {
+              "step": "Write the test",
+              "feature": "F-003"
+            },
+            {
+              "step": "Prepare the data",
+              "feature": "F-003"
+            }
+          ]
         },
         {
-          "step": "Push; Azure Pipelines runs it and publishes the report",
-          "feature": "F-001"
+          "name": "3 · Run and read",
+          "milestone": "P-1 solved: the first test passes",
+          "steps": [
+            {
+              "step": "Run the test",
+              "feature": "F-002"
+            },
+            {
+              "step": "Read the result",
+              "feature": "F-002"
+            }
+          ]
+        },
+        {
+          "name": "Later, not part of P-1",
+          "later": true,
+          "steps": [
+            {
+              "step": "Save to git"
+            },
+            {
+              "step": "Run in Azure Pipelines",
+              "feature": "F-007"
+            },
+            {
+              "step": "Share with the team",
+              "feature": "F-004"
+            }
+          ]
         }
       ]
     }

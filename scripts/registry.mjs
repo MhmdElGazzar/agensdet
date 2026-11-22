@@ -7,7 +7,7 @@
 //   node scripts/registry.mjs snapshot v0.1     copy the views to docs/snapshots/v0.1/
 //
 // registry.json has three parts:
-//   features   agensdet's own features; workflow state per stage (problem … release)
+//   features   AgenSDET's own features; workflow state per stage (problem … release)
 //   workflows  the plugin's main user journeys, step by step, each step pointing at a feature
 //   existing   the audited existing work (VAS framework): components, workflows, task evidence
 
@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const REGISTRY = path.join(ROOT, 'registry.json');
 const DOCS = path.join(ROOT, 'docs');
-const PRODUCT_DOC = path.join(DOCS, 'README.md');
+const PERSONAS = path.join(DOCS, 'personas');
 
 const TYPES = ['command', 'agent', 'skill', 'hook', 'mcp'];
 const TYPE_LABEL = { command: 'Commands', agent: 'Agents', skill: 'Skills', hook: 'Hooks', mcp: 'MCP servers' };
@@ -109,11 +109,26 @@ function sectionBody(md, heading) {
   return out.join('\n').trim();
 }
 
+// Each persona doc (docs/personas/<name>.md) owns its problems: the P-ids in its "## Problems" section.
+function personas() {
+  if (!fs.existsSync(PERSONAS)) return [];
+  return fs.readdirSync(PERSONAS).filter((n) => n.endsWith('.md') && n !== 'README.md').sort().map((n) => {
+    const file = path.join(PERSONAS, n);
+    const md = read(file);
+    const title = (md.match(/^# (.+)$/m) ?? [, n])[1];
+    return { file, rel: `personas/${n}`, md, title, ids: problemRows(md) };
+  });
+}
+
+// P-ids in table order: the first P-id on each table row under "## Problems" (subsections excluded).
+function problemRows(md) {
+  const body = (sectionBody(md, '## Problems') ?? '').split(/\n### /)[0];
+  const ids = body.split('\n').filter((l) => l.trim().startsWith('|')).map((l) => (l.match(/\bP-\d+\b/) ?? [])[0]).filter(Boolean);
+  return [...new Set(ids)];
+}
+
 function problemIds() {
-  const md = read(PRODUCT_DOC);
-  if (!md) return null;
-  const body = sectionBody(md, '## Problems') ?? '';
-  return new Set(body.match(/\bP-\d+\b/g) ?? []);
+  return new Set(personas().flatMap((p) => p.ids));
 }
 
 function walk(dir, out = []) {
@@ -158,17 +173,45 @@ function statusBlock(f) {
   ].join('\n');
 }
 
-function withStatusBlock(md, f) {
-  const re = new RegExp(`${BLOCK_START.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\S]*?${BLOCK_END}`);
-  return re.test(md) ? md.replace(re, statusBlock(f)) : null;
+const escapeRe = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function replaceBlock(md, start, end, content) {
+  const re = new RegExp(`${escapeRe(start)}[\\s\\S]*?${escapeRe(end)}`);
+  return re.test(md) ? md.replace(re, () => content) : null;
 }
+const withStatusBlock = (md, f) => replaceBlock(md, BLOCK_START, BLOCK_END, statusBlock(f));
+
+// "Solved by" table inside each persona doc.
+const SOL_START = '<!-- solutions:start (generated from registry.json; do not edit) -->';
+const SOL_END = '<!-- solutions:end -->';
+
+function solutionsBlock(persona, reg) {
+  const lines = [SOL_START, '| Problem | Solved by | Stage |', '|---------|-----------|-------|'];
+  for (const id of persona.ids) {
+    const fs_ = reg.features.filter((f) => (f.problems ?? []).includes(id));
+    if (!fs_.length) { lines.push(`| ${id} | none yet | — |`); continue; }
+    for (const f of fs_) {
+      const name = f.doc ? `[${f.id} ${f.name}](${path.relative(PERSONAS, path.join(ROOT, f.doc)).split(path.sep).join('/')})` : `${f.id} ${f.name}`;
+      lines.push(`| ${id} | ${name} | ${featureStage(f)} |`);
+    }
+  }
+  lines.push(SOL_END);
+  return lines.join('\n');
+}
+const withSolutionsBlock = (persona, reg) => replaceBlock(persona.md, SOL_START, SOL_END, solutionsBlock(persona, reg));
 
 // ---------- validation ----------
 
 function validate(reg) {
   const errors = [];
   const pids = problemIds();
-  if (!pids) errors.push('docs/README.md is missing (it holds the problem index).');
+  const owner = new Map();
+  for (const p of personas()) {
+    for (const id of p.ids) {
+      if (owner.has(id)) errors.push(`${id} is listed in both ${owner.get(id)} and ${p.rel}. Problem ids are unique across personas.`);
+      owner.set(id, p.rel);
+    }
+    if (!p.md.includes(SOL_START) || !p.md.includes(SOL_END)) errors.push(`docs/${p.rel}: no solutions block.`);
+  }
 
   const ids = new Set();
   for (const f of reg.features) {
@@ -190,7 +233,7 @@ function validate(reg) {
       }
     });
     for (const p of f.problems ?? []) {
-      if (pids && !pids.has(p)) errors.push(`${who}: problem ${p} is not in the Problems section of docs/README.md.`);
+      if (!pids.has(p)) errors.push(`${who}: problem ${p} is not in the Problems section of any persona in docs/personas/.`);
     }
     if (f.path && !fs.existsSync(path.join(ROOT, f.path))) errors.push(`${who}: path "${f.path}" does not exist.`);
     if (stateOf(f, 'build') !== 'not-started' && !f.path) errors.push(`${who}: build has started, so path is required.`);
@@ -217,7 +260,9 @@ function validate(reg) {
     for (const d of f.depends_on ?? []) if (!ids.has(d)) errors.push(`${f.id}: depends_on "${d}" is not a feature id.`);
   }
   for (const w of reg.workflows) {
-    for (const s of w.steps ?? []) {
+    if (w.stages && !Array.isArray(w.stages)) errors.push(`Workflow "${w.name}": stages must be a list.`);
+    for (const st of w.stages ?? []) if (!st.name) errors.push(`Workflow "${w.name}": a stage has no name.`);
+    for (const s of wfSteps(w)) {
       if (s.feature && !ids.has(s.feature)) errors.push(`Workflow "${w.name}": step "${s.step}" uses unknown feature "${s.feature}".`);
     }
   }
@@ -258,52 +303,18 @@ function validate(reg) {
 
 // ---------- rendering ----------
 
+// A workflow is flat (steps) or a journey (stages, each with steps and an optional milestone).
+const wfSteps = (w) => (w.stages ? w.stages.flatMap((st) => st.steps ?? []) : w.steps ?? []);
+
 const nodeId = (id) => 'n_' + String(id).replace(/[^A-Za-z0-9]/g, '_');
 const label = (s) => String(s).replace(/"/g, "'");
-
-function mermaidMap(items, stageText, cls) {
-  let out = '```mermaid\nflowchart LR\n';
-  for (const type of TYPES) {
-    const group = items.filter((c) => c.type === type);
-    if (!group.length) continue;
-    out += `  subgraph ${type}s["${TYPE_LABEL[type]}"]\n`;
-    for (const c of group) out += `    ${nodeId(c.id)}["${label(c.id)} ${label(c.name)}<br/>${label(stageText(c))}"]:::${cls(c)}\n`;
-    out += '  end\n';
-  }
-  for (const c of items) for (const d of c.depends_on ?? []) out += `  ${nodeId(c.id)} --> ${nodeId(d)}\n`;
-  out += '  classDef done stroke:#2e7d32,stroke-width:2px\n';
-  out += '  classDef active stroke:#f9a825,stroke-width:2px\n';
-  out += '  classDef todo stroke-dasharray:4 4\n';
-  out += '  classDef parked stroke:#9e9e9e,stroke-dasharray:2 6\n';
-  return out + '```\n';
-}
 
 function orphanList(items, workflows, key) {
   const used = new Set();
   for (const c of items) for (const d of c.depends_on ?? []) used.add(d);
-  for (const w of workflows) for (const s of w.steps ?? []) if (s[key]) used.add(s[key]);
+  for (const w of workflows) for (const s of wfSteps(w)) if (s[key]) used.add(s[key]);
   const o = items.filter((c) => !['command', 'hook'].includes(c.type) && !used.has(c.id));
   return o.length ? o.map((c) => `- ${c.id} ${c.name} (${c.type})`).join('\n') + '\n' : 'None.\n';
-}
-
-function mermaidWorkflows(workflows, byId, key, prefix) {
-  let out = '';
-  workflows.forEach((w, wi) => {
-    out += `## ${w.name}\n\n`;
-    const steps = w.steps ?? [];
-    if (!steps.length) { out += 'No steps yet.\n\n'; return; }
-    out += '```mermaid\nflowchart LR\n';
-    steps.forEach((s, i) => {
-      const c = byId.get(s[key]);
-      const who = c ? `${label(c.id)} ${label(c.name)}` : 'GAP: nothing covers this step';
-      out += `  ${prefix}${wi}s${i}["${label(s.step)}<br/>${who}"]${c ? '' : ':::gap'}\n`;
-      if (i) out += `  ${prefix}${wi}s${i - 1} --> ${prefix}${wi}s${i}\n`;
-    });
-    out += '  classDef gap stroke:#c62828,stroke-width:2px,stroke-dasharray:4 4\n```\n\n';
-    const gaps = steps.filter((s) => !byId.get(s[key]));
-    if (gaps.length) out += 'Gaps: ' + gaps.map((s) => s.step).join('; ') + '\n\n';
-  });
-  return out;
 }
 
 const featureClass = (f) => {
@@ -312,19 +323,183 @@ const featureClass = (f) => {
   return isStarted(f) ? 'active' : 'todo';
 };
 
+// Components in columns by type, arrows for depends_on ("A uses B").
+function graphSvg(title, items, stageText, cls) {
+  if (!items.length) return null;
+  const NW = 210, NH = 66, GX = 110, GY = 16, PAD = 28, HEAD = 36;
+  const cols = TYPES.filter((t) => items.some((c) => c.type === t));
+  const colOf = new Map(), rowOf = new Map();
+  cols.forEach((t, ci) => items.filter((c) => c.type === t).forEach((c, ri) => { colOf.set(c.id, ci); rowOf.set(c.id, ri); }));
+  const maxRows = Math.max(...cols.map((t) => items.filter((c) => c.type === t).length));
+  const W = PAD * 2 + cols.length * NW + (cols.length - 1) * GX + 40;
+  const H = PAD * 2 + HEAD + maxRows * NH + (maxRows - 1) * GY;
+  const X = (id) => PAD + colOf.get(id) * (NW + GX), Y = (id) => PAD + HEAD + rowOf.get(id) * (NH + GY);
+  const heads = cols.map((t, ci) => `<text class="band-label" x="${PAD + ci * (NW + GX)}" y="${PAD + 18}">${TYPE_LABEL[t]}</text>`);
+  const edges = [];
+  for (const c of items) for (const d of c.depends_on ?? []) {
+    if (!colOf.has(d)) continue;
+    const sc = colOf.get(c.id), tc = colOf.get(d), y1 = Y(c.id) + NH / 2, y2 = Y(d) + NH / 2;
+    let path;
+    if (tc > sc) { const x1 = X(c.id) + NW, x2 = X(d); path = `M${x1},${y1} C${x1 + GX / 2},${y1} ${x2 - GX / 2},${y2} ${x2 - 3},${y2}`; }
+    else if (tc < sc) { const x1 = X(c.id), x2 = X(d) + NW; path = `M${x1},${y1} C${x1 - GX / 2},${y1} ${x2 + GX / 2},${y2} ${x2 + 3},${y2}`; }
+    else { const x = X(c.id) + NW; path = `M${x},${y1} C${x + 55},${y1} ${x + 55},${y2} ${x + 3},${y2}`; }
+    edges.push(`<path class="edge" d="${path}" marker-end="url(#ah)"/>`);
+  }
+  const nodes = items.map((c) => {
+    const x = X(c.id), y = Y(c.id), k = cls(c);
+    return `<g class="node g-${k}"><title>${xml(`${c.id} ${c.name}: ${stageText(c)}`)}</title><rect class="box" x="${x}" y="${y}" width="${NW}" height="${NH}" rx="10"/>`
+      + `<rect class="tag" x="${x + 10}" y="${y + 9}" width="${c.id.length * 6.6 + 14}" height="18" rx="9"/><text class="tag-t" x="${x + 17}" y="${y + 22}">${xml(c.id)}</text>`
+      + `<text class="t" x="${x + 12}" y="${y + 44}">${xml(wrap(c.name, 26, 1)[0])}</text>`
+      + `<text class="s" x="${x + NW - 12}" y="${y + 22}" text-anchor="end">${xml(stageText(c))}</text></g>`;
+  });
+  return svgDoc(title, W, H, [...heads, ...edges, ...nodes].join('\n'));
+}
+
+// A flat workflow drawn like a journey: rows of up to five steps.
+function flatAsJourney(w, key) {
+  const steps = (w.steps ?? []).map((s) => ({ step: s.step, feature: s[key] }));
+  const stages = [];
+  for (let i = 0; i < steps.length; i += 5) stages.push({ name: `Steps ${i + 1}–${Math.min(i + 5, steps.length)}`, steps: steps.slice(i, i + 5) });
+  return { name: w.name, stages };
+}
+
 function componentMap(reg) {
-  let out = HEADER + '# Component map\n\nagensdet\'s features and who uses whom. An arrow from A to B means A uses B.\n\n';
+  let out = HEADER + '# Component map\n\nAgenSDET\'s features by type. An arrow from A to B means A uses B.\n\n';
   if (!reg.features.length) return out + 'No features registered yet.\n';
-  out += mermaidMap(reg.features, featureStage, featureClass);
-  out += '\nBorder: green = ready or released, yellow = in progress, dashed = not started.\n\n';
+  out += '![Component map](assets/component-map.svg)\n\nBorder: green = ready or released, yellow = in progress, dashed = not started.\n\n';
   out += '## Orphans\n\nFeatures nothing uses and no workflow includes.\n\n' + orphanList(reg.features, reg.workflows, 'feature');
   return out;
+}
+
+// ---------- journey as an SVG image (GitHub, the docs site and VS Code all show it) ----------
+
+const xml = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+function wrap(text, max, lines = 2) {
+  const out = [];
+  let cur = '';
+  for (const word of String(text).split(/\s+/)) {
+    if (!cur) cur = word;
+    else if ((cur + ' ' + word).length <= max) cur += ' ' + word;
+    else { out.push(cur); cur = word; }
+  }
+  if (cur) out.push(cur);
+  if (out.length > lines) { out.length = lines; out[lines - 1] = out[lines - 1].replace(/.{0,2}$/, '…'); }
+  return out;
+}
+
+function journeyGaps(w, byId) {
+  return w.stages.filter((st) => !st.later).flatMap((st) => st.steps ?? []).filter((s) => !s.manual && !byId.get(s.feature));
+}
+
+function journeyLegend(w, byId) {
+  const gaps = journeyGaps(w, byId);
+  return 'Red dashed: no feature covers the step yet' + (gaps.length ? ` (${gaps.map((g) => g.step.toLowerCase()).join(', ')})` : '') + '. Grey dashed: done by hand. Faded: later, not part of the first goal.';
+}
+
+function journeySvg(w, byId) {
+  const NW = 172, NH = 92, GX = 36, PAD = 28, LABEL = 34, ROWGAP = 44;
+  const stages = w.stages;
+  const cols = Math.max(...stages.map((st) => (st.steps?.length ?? 0) + (st.milestone ? 1 : 0)));
+  const W = PAD * 2 + cols * NW + (cols - 1) * GX;
+  const bandH = LABEL + NH + 20;
+  const H = PAD * 2 + stages.length * bandH + (stages.length - 1) * ROWGAP;
+  const colX = (c) => PAD + c * (NW + GX);
+  const bandY = (r) => PAD + r * (bandH + ROWGAP);
+  const nodeY = (r) => bandY(r) + LABEL;
+  const body = [], edges = [];
+  let n = 0, prevTail = null;
+
+  stages.forEach((st, r) => {
+    const yb = bandY(r), yn = nodeY(r), mid = yn + NH / 2;
+    body.push(`<rect class="band" x="${PAD - 14}" y="${yb}" width="${W - 2 * PAD + 28}" height="${bandH}" rx="12"/>`);
+    body.push(`<text class="band-label" x="${colX(cols - 1) + NW}" y="${yb + 22}" text-anchor="end">${xml(st.name)}</text>`);
+    const g = st.later ? ' later' : '';
+    (st.steps ?? []).forEach((step, c) => {
+      const x = colX(c), f = byId.get(step.feature);
+      const kind = step.manual ? 'manual' : f ? 'covered' : 'gap';
+      const tag = step.manual ? 'by hand' : f ? f.id : 'no feature';
+      const num = step.manual ? '' : String(++n);
+      const title = wrap(step.step, 22);
+      body.push(`<g class="node ${kind}${g}"><title>${xml(step.step + (f ? ` (${f.id} ${f.name})` : ''))}</title>`
+        + `<rect class="box" x="${x}" y="${yn}" width="${NW}" height="${NH}" rx="10"/>`
+        + `<rect class="tag" x="${x + 10}" y="${yn + 9}" width="${tag.length * 6.6 + 14}" height="18" rx="9"/>`
+        + `<text class="tag-t" x="${x + 17}" y="${yn + 22}">${xml(tag)}</text>`
+        + (num ? `<text class="num" x="${x + NW - 12}" y="${yn + 22}" text-anchor="end">${num}</text>` : '')
+        + title.map((t, i) => `<text class="t" x="${x + 12}" y="${yn + 48 + i * 17}">${xml(t)}</text>`).join('')
+        + (f ? `<text class="s" x="${x + 12}" y="${yn + NH - 10}">${xml(f.name)}</text>` : '')
+        + '</g>');
+      if (c) edges.push(`<path class="edge${g}" d="M${colX(c - 1) + NW},${mid} H${x - 3}" marker-end="url(#ah)"/>`);
+    });
+    const count = st.steps?.length ?? 0;
+    let last = count - 1;
+    if (st.milestone) {
+      const x = colX(count);
+      body.push(`<g class="node milestone"><title>${xml(st.milestone)}</title><rect class="box" x="${x}" y="${yn}" width="${NW}" height="${NH}" rx="10"/>`
+        + `<text class="m-check" x="${x + 12}" y="${yn + 28}">✓</text>`
+        + wrap(st.milestone, 22, 3).map((t, i) => `<text class="t" x="${x + 12}" y="${yn + 50 + i * 17}">${xml(t)}</text>`).join('') + '</g>');
+      if (count) edges.push(`<path class="edge" d="M${colX(count - 1) + NW},${mid} H${x - 3}" marker-end="url(#ah)"/>`);
+      last = count;
+    }
+    if (prevTail) {
+      const gy = yb - ROWGAP / 2;
+      edges.push(`<path class="edge${g}" d="M${prevTail.x},${prevTail.y} V${gy} H${colX(0) + NW / 2} V${yn - 3}" marker-end="url(#ah)"/>`);
+    }
+    prevTail = { x: colX(Math.max(last, 0)) + NW / 2, y: yn + NH };
+  });
+
+  return svgDoc(w.name, W, H, `${body.join('\n')}\n${edges.join('\n')}`);
+}
+
+function svgDoc(title, W, H, inner) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${xml(title)}">
+<title>${xml(title)}</title>
+<!-- Generated by scripts/registry.mjs from registry.json. Do not edit by hand. -->
+<style>
+  :root, svg { --bg:#ffffff; --band:#f2f4f7; --fg:#1f2328; --muted:#59636e; --line:#c9d1d9; --accent:#0e7c86; --gap:#c62828; --ok:#1f7a4d; --ok-bg:#e4f4ec; }
+  @media (prefers-color-scheme: dark) { svg { --bg:#0d1117; --band:#161b22; --fg:#e6edf3; --muted:#9198a1; --line:#3d444d; --accent:#4cc3cc; --gap:#f08a82; --ok:#5cc994; --ok-bg:#173126; } }
+  text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+  .bg { fill: var(--bg); } .band { fill: var(--band); }
+  .band-label { fill: var(--muted); font-size: 13px; font-weight: 600; }
+  .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.5; }
+  .covered .box { stroke: var(--accent); stroke-width: 2; }
+  .gap .box { stroke: var(--gap); stroke-width: 2; stroke-dasharray: 5 4; }
+  .manual .box { stroke-dasharray: 5 4; }
+  .tag { fill: var(--band); } .covered .tag { fill: var(--accent); } .gap .tag { fill: none; stroke: var(--gap); }
+  .tag-t { fill: var(--muted); font-size: 11px; font-weight: 600; } .covered .tag-t { fill: var(--bg); } .gap .tag-t { fill: var(--gap); }
+  .num { fill: var(--muted); font-size: 12px; font-weight: 600; }
+  .t { fill: var(--fg); font-size: 14px; font-weight: 600; }
+  .s { fill: var(--muted); font-size: 12px; }
+  .milestone .box { fill: var(--ok-bg); stroke: var(--ok); stroke-width: 2; }
+  .milestone .t, .m-check { fill: var(--ok); } .m-check { font-size: 18px; font-weight: 700; }
+  .later { opacity: .5; }
+  .g-done .box { stroke: var(--ok); stroke-width: 2; } .g-active .box { stroke: #d29922; stroke-width: 2; } .g-todo .box { stroke-dasharray: 5 4; } .g-parked .box { stroke-dasharray: 2 5; opacity: .6; }
+  .edge { fill: none; stroke: var(--muted); stroke-width: 1.6; } .edge.later { stroke-dasharray: 5 5; }
+  .ah { fill: var(--muted); }
+</style>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="bg" width="${W}" height="${H}" rx="14"/>
+${inner}
+</svg>
+`;
 }
 
 function workflowView(reg) {
   const out = HEADER + '# Workflow view\n\nThe plugin\'s main user journeys. A step no feature covers is a gap.\n\n';
   if (!reg.workflows.length) return out + 'No workflows registered yet.\n';
-  return out + mermaidWorkflows(reg.workflows, new Map(reg.features.map((f) => [f.id, f])), 'feature', 'w');
+  const byId = new Map(reg.features.map((f) => [f.id, f]));
+  return out + reg.workflows.map((w, i) => (w.stages ? `## ${w.name}\n\n![${w.name}](assets/journey.svg)\n\n${journeyLegend(w, byId)}\n\n` : `## ${w.name}\n\n![${w.name}](assets/workflow-${i + 1}.svg)\n\n`)).join('');
+}
+
+// The main journey (first workflow with stages) inside the root README and the Getting started page.
+const JOURNEY_FILES = [[path.join(ROOT, 'README.md'), 'docs/assets/journey.svg'], [path.join(DOCS, 'getting-started.md'), 'assets/journey.svg']];
+const J_START = '<!-- journey:start (generated from registry.json; do not edit) -->';
+const J_END = '<!-- journey:end -->';
+function withJourneyBlock(md, reg, img) {
+  const w = reg.workflows.find((x) => x.stages);
+  if (!w || md === null) return null;
+  const byId = new Map(reg.features.map((f) => [f.id, f]));
+  return replaceBlock(md, J_START, J_END, `${J_START}\n![${w.name}](${img})\n\n${journeyLegend(w, byId)}\n${J_END}`);
 }
 
 function statusMatrix(reg) {
@@ -346,10 +521,10 @@ function statusMatrix(reg) {
   out += `\nIn progress now: ${wip.length}${wip.length ? ' (' + wip.map((f) => f.id).join(', ') + ')' : ''}\n`;
   const byProblem = new Map();
   for (const f of reg.features) for (const p of f.problems ?? []) byProblem.set(p, [...(byProblem.get(p) ?? []), f.id]);
-  const pids = [...(problemIds() ?? [])].sort((a, b) => Number(a.slice(2)) - Number(b.slice(2)));
-  if (pids.length) {
-    out += '\n## Problems and the features that solve them\n\nProblems are described in [docs/README.md](README.md).\n\n| Problem | Features |\n|---------|----------|\n';
-    for (const p of pids) out += `| ${p} | ${(byProblem.get(p) ?? []).join(', ') || 'none yet'} |\n`;
+  const rows = personas().flatMap((p) => p.ids.map((id) => ({ id, p })));
+  if (rows.length) {
+    out += '\n## Problems and the features that solve them\n\n| Problem | Persona | Features |\n|---------|---------|----------|\n';
+    for (const { id, p } of rows) out += `| ${id} | [${p.title}](${p.rel}) | ${(byProblem.get(id) ?? []).join(', ') || 'none yet'} |\n`;
   }
   return out;
 }
@@ -357,13 +532,11 @@ function statusMatrix(reg) {
 function existingWork(reg) {
   const ex = reg.existing;
   let out = HEADER + '# Existing work (audit)\n\n';
-  out += `Source: ${ex.source ?? 'TBD'}. The audit notes are kept locally in \`planning/00-existing-work.md\`. These components are reference material for agensdet's features, not agensdet features.\n\n`;
+  out += `Source: ${ex.source ?? 'TBD'}. The audit notes are kept locally in \`planning/00-existing-work.md\`. These components are reference material for AgenSDET's features, not AgenSDET features.\n\n`;
   if (!ex.components.length) return out + 'Nothing audited yet.\n';
-  const evClass = (c) => ({ works: 'done', 'in-progress': 'active', idea: 'todo', deferred: 'parked' })[c.state];
-  out += '## Component map\n\n' + mermaidMap(ex.components, evidenceStage, evClass);
-  out += '\nBorder: green = works, yellow = in progress, dashed = idea, grey dashed = deferred.\n\n';
+  out += '## Component map\n\n![Existing components](assets/existing-map.svg)\n\nBorder: green = works, yellow = in progress, dashed = idea, faint = deferred. An arrow from A to B means A uses B.\n\n';
   out += '### Orphans\n\n' + orphanList(ex.components, ex.workflows, 'component') + '\n';
-  out += '## Workflows\n\n' + mermaidWorkflows(ex.workflows, new Map(ex.components.map((c) => [c.id, c])), 'component', 'x').replace(/^## /gm, '### ');
+  out += '## Workflows\n\n' + ex.workflows.map((w, i) => `### ${w.name}\n\n![${w.name}](assets/existing-workflow-${i + 1}.svg)\n\n`).join('');
   out += '## Evidence matrix\n\n✅ done, 🟡 partial, ❌ missing. The stage is the first column that is not ✅.\n\n';
   out += '| ID | Component | Type | State | Spec | Build | Evals | Real use | Docs | Stage |\n';
   out += '|----|-----------|------|-------|------|-------|-------|----------|------|-------|\n';
@@ -373,8 +546,41 @@ function existingWork(reg) {
   return out;
 }
 
+// Index of the ADRs, newest last, titled from each file's first heading.
+function adrIndex() {
+  const dir = path.join(DOCS, 'adr');
+  const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((n) => /^\d{4}-.+\.md$/.test(n) && !n.startsWith('0000-')).sort() : [];
+  let out = HEADER + '# Decisions (ADRs)\n\nOne file per design decision that had alternatives. Copy `0000-template.md` to add one.\n\n';
+  if (!files.length) return out + 'None yet.\n';
+  for (const n of files) {
+    const md = read(path.join(dir, n));
+    const title = (md.match(/^# (.+)$/m) ?? [, n])[1];
+    const status = (md.match(/^- Status: (.+)$/m) ?? [, ''])[1];
+    out += `- [${title}](${n})${status ? ` — ${status}` : ''}\n`;
+  }
+  return out;
+}
+
+function images(reg) {
+  const out = {};
+  const fById = new Map(reg.features.map((f) => [f.id, f]));
+  const cById = new Map(reg.existing.components.map((c) => [c.id, c]));
+  const fmap = graphSvg('Component map', reg.features, featureStage, featureClass);
+  if (fmap) out['assets/component-map.svg'] = fmap;
+  reg.workflows.forEach((w, i) => { if (!w.stages) out[`assets/workflow-${i + 1}.svg`] = journeySvg(flatAsJourney(w, 'feature'), fById); });
+  const evClass = (c) => ({ works: 'done', 'in-progress': 'active', idea: 'todo', deferred: 'parked' })[c.state];
+  const emap = graphSvg('Existing components', reg.existing.components, evidenceStage, evClass);
+  if (emap) out['assets/existing-map.svg'] = emap;
+  reg.existing.workflows.forEach((w, i) => { out[`assets/existing-workflow-${i + 1}.svg`] = journeySvg(flatAsJourney(w, 'component'), cById); });
+  return out;
+}
+
 function render(reg) {
+  const journey = reg.workflows.find((x) => x.stages);
   return {
+    ...(journey ? { 'assets/journey.svg': journeySvg(journey, new Map(reg.features.map((f) => [f.id, f]))) } : {}),
+    ...images(reg),
+    'adr/README.md': adrIndex(),
     'component-map.md': componentMap(reg),
     'workflows.md': workflowView(reg),
     'status-matrix.md': statusMatrix(reg),
@@ -398,10 +604,18 @@ if (cmd === 'generate') {
   if (errors.length) fail(errors);
   fs.mkdirSync(DOCS, { recursive: true });
   const views = render(reg);
-  for (const [name, text] of Object.entries(views)) fs.writeFileSync(path.join(DOCS, name), text);
+  for (const [name, text] of Object.entries(views)) { fs.mkdirSync(path.dirname(path.join(DOCS, name)), { recursive: true }); fs.writeFileSync(path.join(DOCS, name), text); }
   for (const f of docsWithBlock) {
     const file = path.join(ROOT, f.doc);
     fs.writeFileSync(file, withStatusBlock(read(file), f));
+  }
+  for (const p of personas()) {
+    const updated = withSolutionsBlock(p, reg);
+    if (updated !== null) fs.writeFileSync(p.file, updated);
+  }
+  for (const [file, img] of JOURNEY_FILES) {
+    const updated = withJourneyBlock(read(file), reg, img);
+    if (updated !== null) fs.writeFileSync(file, updated);
   }
   console.log(`Wrote ${Object.keys(views).map((n) => 'docs/' + n).join(', ')}` + (docsWithBlock.length ? ` and the status block in ${docsWithBlock.length} feature doc(s)` : ''));
 } else if (cmd === 'check') {
@@ -413,6 +627,14 @@ if (cmd === 'generate') {
     const updated = withStatusBlock(md, f);
     if (updated !== null && updated !== md) errors.push(`${f.doc}: status block is out of date. Run: node scripts/registry.mjs generate`);
   }
+  for (const p of personas()) {
+    const updated = withSolutionsBlock(p, reg);
+    if (updated !== null && updated !== p.md) errors.push(`docs/${p.rel}: solutions block is out of date. Run: node scripts/registry.mjs generate`);
+  }
+  for (const [file, img] of JOURNEY_FILES) {
+    const md = read(file), updated = withJourneyBlock(md, reg, img);
+    if (updated !== null && updated !== md) errors.push(`${path.relative(ROOT, file)}: journey block is out of date. Run: node scripts/registry.mjs generate`);
+  }
   if (errors.length) fail(errors);
   console.log(`OK: ${reg.features.length} features, ${reg.workflows.length} workflows, ${reg.existing.components.length} existing components; docs up to date.`);
 } else if (cmd === 'snapshot') {
@@ -421,7 +643,7 @@ if (cmd === 'generate') {
   const dir = path.join(DOCS, 'snapshots', arg);
   if (fs.existsSync(dir)) fail([`docs/snapshots/${arg} already exists. Snapshots are not overwritten.`]);
   fs.mkdirSync(dir, { recursive: true });
-  for (const [name, text] of Object.entries(render(reg))) fs.writeFileSync(path.join(dir, name), text);
+  for (const [name, text] of Object.entries(render(reg))) { fs.mkdirSync(path.dirname(path.join(dir, name)), { recursive: true }); fs.writeFileSync(path.join(dir, name), text); }
   fs.copyFileSync(REGISTRY, path.join(dir, 'registry.json'));
   console.log(`Snapshot written to docs/snapshots/${arg}/`);
 } else {

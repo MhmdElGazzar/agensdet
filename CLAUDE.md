@@ -1,6 +1,6 @@
-# agensdet
+# AgenSDET
 
-A Claude plugin, planned and built in small sessions. Its purpose and users are described in `docs/README.md`.
+A Claude plugin, planned and built in small sessions. Its purpose is described in `docs/README.md`; its users in `docs/personas/`.
 
 ## How every session starts and ends
 
@@ -14,10 +14,19 @@ Do not guess answers the user has not given. Unanswered items stay as `TBD` and 
 
 Two things are kept apart ([ADR-0003](docs/adr/0003-feature-doc-separate-from-workflow.md)):
 
-- **Doc** — what a feature is and why, written for a reader a year from now. `docs/README.md` is the plugin overview and the problem index (P-1, P-2, …). Each feature has one doc, `docs/features/<id>-<name>/README.md`, organized by topic: Problem and users, Solution, Behavior, Quality, Decisions, Changelog.
+- **Doc** — what a feature is and why, written for a reader a year from now. `docs/README.md` is the plugin overview and the decisions log. Each persona has one doc, `docs/personas/<name>.md`: who they are, their problems (P-1, P-2, …, unique across personas), what success looks like, and a generated table of the features that solve each problem. Each feature has one doc, `docs/features/<id>-<name>/README.md`, organized by topic: Problem and users, Solution, Behavior, Quality, Decisions, Changelog.
 - **Workflow** — how far we are. Stage skills in `.claude/skills/`, stage state in `registry.json`, plugin-wide planning in `planning/` (`STATUS.md`, `roadmap.md`, `00-existing-work.md`).
 
 `docs/` is what we publish; `planning/`, `registry.json` and `.claude/skills/` are how we work.
+
+### Writing docs
+
+- Say each thing once. If it is already written elsewhere, link to it (persona details live only in the persona doc; features link to them).
+- No intro sentence that restates the table or list below it.
+- No column where every row has the same value; state it once above the table.
+- One table with more columns beats two tables about the same rows.
+- Decisions: one per line, grouped under a date heading: **the decision.** Why, in one sentence. *Confirmed* or *Draft*.
+- Every stage skill follows these rules.
 
 ## Feature workflow (per feature)
 
@@ -55,10 +64,14 @@ WIP limit: no new feature is started until every feature in progress is ready or
 
 `registry.json` is the single source for features (type, release, problems, stages, path, depends_on, built_from), the plugin's main user journeys (`workflows`), and the audited existing work (`existing`). Generated from it, never edited by hand:
 
-- `docs/status-matrix.md` (the board), `docs/component-map.md`, `docs/workflows.md`, `docs/existing-work.md`
+- `docs/status-matrix.md` (the board), `docs/component-map.md`, `docs/workflows.md`, `docs/existing-work.md`, `docs/adr/README.md`
 - the status block between `registry:start` and `registry:end` in each feature doc
+- the solutions table between `solutions:start` and `solutions:end` in each persona doc
+- the journey diagram between `journey:start` and `journey:end` in the root `README.md` (Getting started), from the first workflow that has `stages`
 
 Commands: `node scripts/registry.mjs generate` after any change; `check` before finishing a session or merging; `snapshot <version>` at each release (copy in `docs/snapshots/<version>/`).
+
+Docs site: `website/` is Docusaurus and reads `docs/` directly (nothing is copied). Diagrams are SVG images the script generates into `docs/assets/`, not Mermaid. Preview with `cd website && npm run build && npm run serve`. Plain `.md` files are parsed as CommonMark, so HTML comments in generated blocks are fine; don't rename them to `.mdx`.
 
 A design decision that a diagram cannot explain gets a short ADR in `docs/adr/` (copy `0000-template.md`) and a dated line under "Decisions" in the feature doc.
 

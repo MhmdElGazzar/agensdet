@@ -11,7 +11,7 @@ The first layout had one file per workflow phase for the whole plugin. After two
 
 ## Decision
 
-- **Doc:** each feature has one file, `docs/features/<id>-<name>/README.md`, organized by topic for the reader: Problem and users, Solution, Behavior, Quality, Decisions, Changelog. GitHub shows it when the folder is opened. The plugin-wide overview and the problem index (P-1, P-2, …) live in `docs/README.md`.
+- **Doc:** each feature has one file, `docs/features/<id>-<name>/README.md`, organized by topic for the reader: Problem and users, Solution, Behavior, Quality, Decisions, Changelog. GitHub shows it when the folder is opened. The plugin-wide overview lives in `docs/README.md`. Each persona has its own doc in `docs/personas/` with its problems (P-1, P-2, …) and a generated table of the features that solve them (added 2026-11-22).
 - **Workflow:** stages problem → workflow → design → spec → evals → build → release. Each stage is a skill in `.claude/skills/` that writes its section of the doc. The state of each stage (not-started, draft, approved with a date) is in `registry.json`. The board is generated.
 - A feature does not move between folders. Its doc grows in place; the stage is derived from the registry.
 - Evals live outside the doc (`evals/<id>-<name>/`); the doc's Quality section keeps a summary.
@@ -25,5 +25,5 @@ The first layout had one file per workflow phase for the whole plugin. After two
 ## Consequences
 
 - `scripts/registry.mjs check` enforces that a stage marked started has content in its doc section, and that a stage starts only after the previous one is approved.
-- The existing VAS components move under `existing` in the registry with V-xx ids; they are reference material, not agensdet features.
+- The existing VAS components move under `existing` in the registry with V-xx ids; they are reference material, not AgenSDET features.
 - Skills for the later stages (`feature-workflow`, `feature-design`, …) are written when the first feature reaches them.

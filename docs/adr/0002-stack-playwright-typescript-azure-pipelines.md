@@ -2,7 +2,7 @@
 
 - Status: Accepted (user, 2026-11-22)
 - Date: 2026-11-22
-- Components: v0.1 features (`/automation-init`, `/automation-run`, `test-design-basics`)
+- Components: all v0.1 features
 
 ## Context
 

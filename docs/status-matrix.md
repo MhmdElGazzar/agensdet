@@ -6,23 +6,26 @@ The feature board. ✅ approved, 🟡 draft, ❌ not started. A feature's stage 
 
 | ID | Feature | Type | Release | Problem | Workflow | Design | Spec | Evals | Build | Release | Stage |
 |----|---------|------|---------|---|---|---|---|---|---|---|-------|
-| F-001 | [automation-init](features/F-001-automation-init/README.md) | command | v0.1 | 🟡 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: draft |
+| F-004 | quality-review | skill | TBD | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
+| F-007 | ci-pipeline | command | TBD | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
+| F-001 | [tool-setup](features/F-001-tool-setup/README.md) | command | v0.1 | 🟡 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: draft |
 | F-002 | automation-run | command | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
 | F-003 | test-design-basics | skill | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
+| F-005 | [project-create](features/F-005-project-create/README.md) | command | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
+| F-006 | project-structure | command | v0.1 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | Problem: not-started |
 
 ## By stage
 
-- Problem: 3
+- Problem: 7
 
 In progress now: 1 (F-001)
 
 ## Problems and the features that solve them
 
-Problems are described in [docs/README.md](README.md).
-
-| Problem | Features |
-|---------|----------|
-| P-1 | F-001 |
-| P-2 | F-003 |
-| P-3 | F-001, F-003 |
-| P-4 | F-002 |
+| Problem | Persona | Features |
+|---------|---------|----------|
+| P-1 | [Manual QA starting automation](personas/manual-qa.md) | F-001, F-005, F-006, F-007 |
+| P-2 | [Manual QA starting automation](personas/manual-qa.md) | F-003 |
+| P-3 | [Manual QA starting automation](personas/manual-qa.md) | F-003, F-006 |
+| P-4 | [Manual QA starting automation](personas/manual-qa.md) | F-002, F-005 |
+| P-5 | [Manual QA starting automation](personas/manual-qa.md) | F-004, F-006 |
